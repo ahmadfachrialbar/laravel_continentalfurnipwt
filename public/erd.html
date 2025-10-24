@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERD Website Toko Online Furniture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            margin: 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        #canvas-container {
+            overflow: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: #fafafa;
+            padding: 20px;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: white;
+        }
+        .legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        .legend-item {
+            display: inline-block;
+            margin-right: 20px;
+            margin-bottom: 5px;
+        }
+        .legend-item span {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧱 ERD Website Toko Online Furniture</h1>
+        <p class="subtitle">Entity Relationship Diagram - Sistem Database Toko Furniture</p>
+        
+        <div class="controls">
+            <button onclick="downloadImage()">📥 Download PNG (High Quality)</button>
+        </div>
+        
+        <div id="canvas-container">
+            <canvas id="erdCanvas"></canvas>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item"><span>PK:</span>Primary Key</div>
+            <div class="legend-item"><span>FK:</span>Foreign Key</div>
+            <div class="legend-item"><span>Relasi:</span>||--o{ (One to Many), ||--|| (One to One)</div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('erdCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        canvas.width = 1500;
+        canvas.height = 1800;
+
+        // Entity data
+        const entities = {
+            users: {
+                x: 100, y: 100, width: 280, height: 280,
+                title: 'users',
+                fields: [
+                    'id: BIGINT (PK)',
+                    'name: VARCHAR(100)',
+                    'email: VARCHAR(100)',
+                    'password: VARCHAR(255)',
+                    'phone: VARCHAR(20)',
+                    'address: TEXT',
+                    'role: ENUM',
+                    'created_at: TIMESTAMP',
+                    'updated_at: TIMESTAMP'
+                ]
+            },
+            categories: {
+                x: 520, y: 100, width: 280, height: 200,
+                title: 'categories',
+                fields: [
+                    'id: BIGINT (PK)',
+                    'name: VARCHAR(100)',
+                    'slug: VARCHAR(100)',
+                    'description: TEXT',
+                    'created_at: TIMESTAMP',
+                    'updated_at: TIMESTAMP'
+                ]
+            },
+            products: {
+                x: 940, y: 100, width: 280, height: 320,
+                title: 'products',
+                fields: [
+                    'id: BIGINT (PK)',
+                    'category_id: BIGINT (FK)',
+                    'name: VARCHAR(150)',
+                    'slug: VARCHAR(150)',
+                    'description: TEXT',
+                    'price: DECIMAL(15,2)',
+                    'stock: INT',
+                    'image: VARCHAR(255)',
+                    'weight: DECIMAL(10,2)',
+                    'created_at: TIMESTAMP',
+                    'updated_at: TIMESTAMP'
+                ]
+            },
+            carts: {
+                x: 520, y: 500, width: 280, height: 200,
+                title: 'carts',
+                fields: [
+                    'id: BIGINT (PK)',
+                    'user_id: BIGINT (FK)',
+                    'product_id: BIGINT (FK)',
+                    'quantity: INT',
+                    'created_at: TIMESTAMP',
+                    'updated_at: TIMESTAMP'
+                ]
+            },
+            orders: {
+                x: 100, y: 800, width: 320, height: 440,
+                title: 'orders',
+                fields: [
+                    'id: BIGINT (PK)',
+                    'user_id: BIGINT (FK)',
+                    'order_code: VARCHAR(50)',
+                    'total_amount: DECIMAL(15,2)',
+                    'shipping_cost: DECIMAL(15,2)',
+                    'grand_total: DECIMAL(15,2)',
+                    'status: ENUM',
+                    'payment_status: ENUM',
+                    'payment_method: VARCHAR(50)',
+                    'midtrans_order_id: VARCHAR(100)',
+                    'midtrans_transaction_id: VARCHAR(100)',
+                    'payment_token: VARCHAR(255)',
+                    'shipping_address: TEXT',
+                    'created_at: TIMESTAMP',
+                    'updated_at: TIMESTAMP'
+                ]
+            },
+            order_items: {
+                x: 580, y: 950, width: 280, height: 240,
+                title: 'order_items',
+                fields: [
+                    'id: BIGINT (PK)',
+                    'order_id: BIGINT (FK)',
+                    'product_id: BIGINT (FK)',
+                    'quantity: INT',
+                    'price: DECIMAL(15,2)',
+                    'subtotal: DECIMAL(15,2)',
+                    'created_at: TIMESTAMP',
+                    'updated_at: TIMESTAMP'
+                ]
+            },
+            payments: {
+                x: 580, y: 1400, width: 300, height: 300,
+                title: 'payments',
+                fields: [
+                    'id: BIGINT (PK)',
+                    'order_id: BIGINT (FK)',
+                    'transaction_id: VARCHAR(100)',
+                    'payment_type: VARCHAR(50)',
+                    'transaction_status: VARCHAR(50)',
+                    'gross_amount: DECIMAL(15,2)',
+                    'currency: VARCHAR(10)',
+                    'paid_at: DATETIME',
+                    'created_at: TIMESTAMP',
+                    'updated_at: TIMESTAMP'
+                ]
+            }
+        };
+
+        // Draw entity box
+        function drawEntity(entity) {
+            // Shadow
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+            ctx.shadowBlur = 10;
+            ctx.shadowOffsetX = 3;
+            ctx.shadowOffsetY = 3;
+
+            // Box
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(entity.x, entity.y, entity.width, entity.height);
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(entity.x, entity.y, entity.width, entity.height);
+
+            // Reset shadow
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+
+            // Header
+            ctx.fillStyle = '#667eea';
+            ctx.fillRect(entity.x, entity.y, entity.width, 35);
+            
+            // Title
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(entity.title, entity.x + entity.width / 2, entity.y + 23);
+
+            // Fields
+            ctx.fillStyle = '#333';
+            ctx.font = '12px Courier New';
+            ctx.textAlign = 'left';
+            let yOffset = entity.y + 55;
+            entity.fields.forEach((field, index) => {
+                if (field.includes('(PK)')) {
+                    ctx.fillStyle = '#d32f2f';
+                    ctx.font = 'bold 12px Courier New';
+                } else if (field.includes('(FK)')) {
+                    ctx.fillStyle = '#1976d2';
+                    ctx.font = 'bold 12px Courier New';
+                } else {
+                    ctx.fillStyle = '#333';
+                    ctx.font = '12px Courier New';
+                }
+                ctx.fillText(field, entity.x + 10, yOffset);
+                yOffset += 20;
+            });
+        }
+
+        // Draw relationship line
+        function drawRelation(x1, y1, x2, y2, label, type) {
+            ctx.strokeStyle = '#764ba2';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([]);
+            
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+
+            // Label
+            ctx.fillStyle = '#764ba2';
+            ctx.font = 'bold 11px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, (x1 + x2) / 2, (y1 + y2) / 2 - 5);
+
+            // Cardinality symbols
+            ctx.font = '14px Arial';
+            if (type === 'one-to-many') {
+                ctx.fillText('1', x1 + (x2 - x1) * 0.1, y1 + (y2 - y1) * 0.1 - 5);
+                ctx.fillText('*', x1 + (x2 - x1) * 0.9, y1 + (y2 - y1) * 0.9 - 5);
+            } else if (type === 'one-to-one') {
+                ctx.fillText('1', x1 + (x2 - x1) * 0.1, y1 + (y2 - y1) * 0.1 - 5);
+                ctx.fillText('1', x1 + (x2 - x1) * 0.9, y1 + (y2 - y1) * 0.9 - 5);
+            }
+        }
+
+        // Draw all
+        function drawERD() {
+            // Clear canvas
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw relationships first (behind entities)
+            // users -> carts
+            drawRelation(240, 380, 580, 500, 'has', 'one-to-many');
+            
+            // users -> orders
+            drawRelation(240, 380, 240, 800, 'places', 'one-to-many');
+            
+            // categories -> products
+            drawRelation(800, 200, 940, 200, 'contains', 'one-to-many');
+            
+            // products -> carts
+            drawRelation(940, 420, 800, 600, 'added_to', 'one-to-many');
+            
+            // products -> order_items
+            drawRelation(1080, 420, 860, 1070, 'included_in', 'one-to-many');
+            
+            // orders -> order_items
+            drawRelation(420, 1020, 580, 1070, 'has', 'one-to-many');
+            
+            // orders -> payments
+            drawRelation(360, 1240, 680, 1400, 'processed_by', 'one-to-one');
+
+            // Draw entities on top
+            Object.values(entities).forEach(entity => {
+                drawEntity(entity);
+            });
+        }
+
+        // Download function
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'ERD_Toko_Online_Furniture.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Initial draw
+        drawERD();
+    </script>
+</body>
+</html>
