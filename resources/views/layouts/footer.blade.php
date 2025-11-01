@@ -5,7 +5,7 @@
       <!-- Company Info -->
         <div class="space-y-5">
           <div class="space-y-3">
-            <h2 class="font-bold text-2xl">FurniStyle</h2>
+            <h2 class="font-bold text-2xl">Continental Furniture Purwokerto</h2>
             <p class="text-sm leading-[24px] text-white/80">
               Marketplace furniture terpercaya di Indonesia. Kami menyediakan berbagai produk furniture berkualitas untuk rumah impian Anda.
             </p>
@@ -60,16 +60,16 @@
       <div>
         <h3 class="font-semibold text-lg mb-4">Kontak</h3>
         <ul class="space-y-3 text-sm text-white/80">
-          <li>📍 Jakarta Selatan, Indonesia</li>
-          <li>📧 info@furnistyle.com</li>
-          <li>📞 +62 812-3456-7890</li>
+          <li>📍 Purwokerto, Indonesia</li>
+          <li>📧 cfp@gmail.com</li>
+          <li>📞 +62885117044989</li>
         </ul>
       </div>
     </div>
 
     <!-- Bottom Footer -->
     <div class="py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-      <p class="text-sm text-white/60">&copy; {{ date('Y') }} FurniStyle. All rights reserved.</p>
+      <p class="text-sm text-white/60">&copy; {{ date('Y') }} Continental Furniture Purwokerto. All rights reserved.</p>
       <div class="flex gap-6 text-sm">
         <a href="#" class="text-white/60 hover:text-secondary">Privacy Policy</a>
         <a href="#" class="text-white/60 hover:text-secondary">Terms</a>

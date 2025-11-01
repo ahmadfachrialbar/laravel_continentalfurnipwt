@@ -2,34 +2,43 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
+
+
 Route::get('/', function () {
     return view('pages.home.index');
 });
-Route::get('/cart', function () {
-    return view('pages.cart.index');
-});
 
-Route::get('/login', function () {
-    return view('pages.auth.login');
-});
-Route::get('/register', function () {
-    return view('pages.auth.register');
+// Move all use statements to the top
+
+// Regular user routes group
+Route::middleware(['web', 'auth:web'])->group(function () {
+    // Your existing authenticated user routes
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/success/{id}', [CheckoutController::class, 'success'])->name('checkout.success');
 });
 
 // Home routes
-use App\Http\Controllers\HomeController;
+
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Product routes
-use App\Http\Controllers\ProductController;
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{slug}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/products/category/{slug}', [ProductController::class, 'byCategory'])->name('products.byCategory');
 
 // Cart routes
-use App\Http\Controllers\CartController;
+
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::get('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
@@ -37,14 +46,12 @@ Route::post('/cart/update/{id}', [CartController::class, 'updateQuantity'])->nam
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
 // Category routes
-use App\Http\Controllers\CategoryController;
 
 Route::get('/', [CategoryController::class, 'home'])->name('home');
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
 
 // login and register routes
-use App\Http\Controllers\AuthController;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
@@ -55,18 +62,20 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.pr
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Profile routes
-use App\Http\Controllers\ProfileController;
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 // Checkout routes
-use App\Http\Controllers\CheckoutController;
 
 Route::middleware(['auth'])->group(function () {
     // Halaman utama checkout (form)
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::get('/checkout', [CheckoutController::class, 'index'])
+    ->middleware('auth.redirect')
+    ->name('checkout.index');
 
     // Proses simpan order + lanjut pembayaran
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
@@ -76,6 +85,9 @@ Route::middleware(['auth'])->group(function () {
 
     
 });
+
+
+
 
 
 

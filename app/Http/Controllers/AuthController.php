@@ -31,13 +31,36 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/')->with('success', 'Berhasil login!');
+            $user = Auth::user();
+
+            // Sinkronisasi cart dari session ke database
+            $sessionCart = session()->get('cart', []);
+            if (!empty($sessionCart)) {
+                foreach ($sessionCart as $productId => $item) {
+                    $cart = \App\Models\Cart::firstOrNew([
+                        'user_id' => $user->id,
+                        'product_id' => $productId,
+                    ]);
+                    $cart->quantity = ($cart->exists ? $cart->quantity + $item['quantity'] : $item['quantity']);
+                    $cart->save();
+                }
+                session()->forget('cart'); // hapus dari session setelah disimpan ke DB
+            }
+
+            // Redirect logic
+            if ($user->role === 'admin') {
+                return redirect()->route('filament.admin.pages.dashboard')->with('success', 'Berhasil login sebagai admin!');
+            }
+
+            $redirectUrl = session()->pull('redirect_after_login', route('home'));
+            return redirect()->to($redirectUrl)->with('success', 'Berhasil login!');
         }
 
         return back()->withErrors([
             'email' => 'Email atau password salah.',
         ])->withInput();
     }
+
 
     // 🔹 Proses register
     public function register(Request $request)
@@ -54,6 +77,7 @@ class AuthController extends Controller
             'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
             'password' => Hash::make($validated['password']),
+            'role' => 'user',
         ]);
 
         Auth::login($user);
@@ -64,9 +88,15 @@ class AuthController extends Controller
     // 🔹 Logout
     public function logout(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        // Get the guard name before logout
+        $guard = Auth::getDefaultDriver();
+
+        // Only logout if it's the web guard (regular users)
+        if ($guard === 'web') {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
 
         return redirect('/')->with('success', 'Anda telah logout.');
     }

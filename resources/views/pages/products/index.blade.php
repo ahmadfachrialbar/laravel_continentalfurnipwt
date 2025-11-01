@@ -7,8 +7,8 @@
         <!-- Header -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 ml-[40px] mr-[40px] ">
             <h1 class="font-bold text-xl sm:text-2xl md:text-3xl leading-tight text-center md:text-left">
-                All Products <br class="block md:hidden" />
-                From Official Stores
+                Semua Produk <br class="block md:hidden" />
+                Dari Toko Kami
             </h1>
 
             <div class="flex flex-wrap justify-center md:justify-end gap-3">
@@ -17,7 +17,7 @@
                     onchange="if (this.value) window.location.href=this.value">
                     <option value="{{ route('products.index') }}"
                         {{ is_null($categoryActive) ? 'selected' : '' }}>
-                        All Categories
+                        Semua kategori
                     </option>
                     @foreach ($categories as $category)
                     <option value="{{ route('products.byCategory', $category->slug) }}"

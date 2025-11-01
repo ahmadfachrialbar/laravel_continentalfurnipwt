@@ -8,7 +8,7 @@
             <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-5 space-y-2 sticky top-[160px] sidebar-scroll">
                 <!-- User Info -->
                 <div class="flex items-center gap-4 pb-6 border-b border-[#E5E5E5]">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-2xl font-bold text-white">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-2xl font-bold text-primary">
                         {{ strtoupper(substr($user->name, 0, 1)) }}
                     </div>
                     <div class="flex-1 min-w-0">
@@ -19,7 +19,7 @@
 
                 <!-- Menu -->
                 <nav class="space-y-2">
-                    <a href="{{ route('profile') }}" class="flex items-center gap-3 px-4 py-3 rounded-[10px] bg-primary text-white font-semibold transition-all duration-300">
+                    <a href="" class="flex items-center gap-3 px-4 py-3 rounded-[10px] hover:bg-gray-50 font-semibold transition-all duration-300">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
@@ -67,7 +67,7 @@
             <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="font-bold text-xl">Informasi Akun</h2>
-                    <button class="text-primary font-semibold hover:text-secondary transition-colors">Edit Profil</button>
+                    <a href="{{ route('profile.edit') }}" class="text-primary font-semibold hover:text-secondary transition-colors">Edit Profil</a>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-1">
@@ -89,116 +89,27 @@
                 </div>
             </div>
 
-            <!-- Recent Orders -->
+            <!-- pesanan saya -->
             <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="font-bold text-xl">Pesanan Saya</h2>
-                    <a href="" class="text-primary font-semibold hover:text-secondary transition-colors">Lihat Detail</a>
-                </div>
-
-                <!-- Order Item -->
-                <div class="space-y-4">
-                    <!-- Order 1 -->
-                    <div class="border border-[#E5E5E5] rounded-[15px] p-4 hover:border-secondary transition-all duration-300">
-                        <div class="flex items-start justify-between mb-3">
-                            <div>
-                                <p class="text-sm text-gray-500">Order #12345</p>
-                                <p class="text-xs text-gray-400">20 Oktober 2024</p>
-                            </div>
-                            <span class="px-3 py-1 bg-green-100 text-green-600 text-xs font-semibold rounded-full">Selesai</span>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <img src="./assets/image/thumbnails/meja1.png" alt="Product" class="w-16 h-16 object-cover rounded-[10px]">
-                            <div class="flex-1">
-                                <h3 class="font-semibold leading-[22px]">iMac Green Energy</h3>
-                                <p class="text-sm text-gray-500">1 item</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-semibold text-primary">Rp 24.000.000</p>
-                                <button class="text-sm text-secondary hover:text-primary transition-colors mt-1">Beli Lagi</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Order 2 -->
-                </div>
+                <h2 class="font-bold text-xl mb-6">Pesanan Saya</h2>
+                <p class="text-gray-500">Anda belum memiliki pesanan.</p>
+            </div>
+            <!-- Alamat saya -->
+            <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-6">
+                <h2 class="font-bold text-xl mb-6">Alamat Saya</h2>
+                <p class="text-gray-500">Anda belum memiliki alamat.</p>
+            </div>
+            <!-- Ulasan saya -->
+            <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-6">
+                <h2 class="font-bold text-xl mb-6">Ulasan Saya</h2>
+                <p class="text-gray-500">Anda belum memiliki ulasan.</p>
             </div>
 
-            <!-- Statistics -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-5 text-center hover:border-secondary transition-all duration-300">
-                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
-                    </div>
-                    <p class="text-2xl font-bold">12</p>
-                    <p class="text-sm text-gray-500">Total Pesanan</p>
-                </div>
-
-                <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-5 text-center hover:border-secondary transition-all duration-300">
-                    <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-3">
-                        <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <p class="text-2xl font-bold">8</p>
-                    <p class="text-sm text-gray-500">Selesai</p>
-                </div>
-
-                <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-5 text-center hover:border-secondary transition-all duration-300">
-                    <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-3">
-                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <p class="text-2xl font-bold">3</p>
-                    <p class="text-sm text-gray-500">Diproses</p>
-                </div>
-
-                <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-5 text-center hover:border-secondary transition-all duration-300">
-                    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3">
-                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </div>
-                    <p class="text-2xl font-bold">1</p>
-                    <p class="text-sm text-gray-500">Dibatalkan</p>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 
-<!-- Mobile Bottom Navigation (only visible on mobile) -->
-<div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#E5E5E5] px-4 py-3 z-50">
-    <div class="flex items-center justify-around">
-        <a href="{{ route('profile') }}" class="flex flex-col items-center gap-1 text-primary">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            <span class="text-xs font-semibold">Profil</span>
-        </a>
-        <a href="" class="flex flex-col items-center gap-1 text-gray-400">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-            </svg>
-            <span class="text-xs font-semibold">Pesanan</span>
-        </a>
-        <a href="" class="flex flex-col items-center gap-1 text-gray-400">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-            <span class="text-xs font-semibold">Wishlist</span>
-        </a>
-        <a href="" class="flex flex-col items-center gap-1 text-gray-400">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <span class="text-xs font-semibold">Pengaturan</span>
-        </a>
-    </div>
-</div>
+
 @endsection
 
 <style>

@@ -21,7 +21,7 @@
     </div>
     <div class="mt-[30px] md:mt-[40px] px-[20px] md:px-[75px] text-center">
         <p class="text-sm md:text-base text-[#3C2A21] font-semibold">
-            Furnistyle
+            Continental Furniture Purwokerto
         </p>
         <p class="text-xs md:text-sm text-[#616369] leading-[20px]">
             Jl. Raya Karanglewas No. 25, Banyumas, Jawa Tengah<br />

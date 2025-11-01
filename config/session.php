@@ -130,7 +130,11 @@ return [
     'cookie' => env(
         'SESSION_COOKIE',
         Str::slug((string) env('APP_NAME', 'laravel')).'-session'
+
+        
     ),
+
+    'cookie' => 'filament_session',  // Cookie khusus untuk Filament, bukan 'laravel_session'
 
     /*
     |--------------------------------------------------------------------------

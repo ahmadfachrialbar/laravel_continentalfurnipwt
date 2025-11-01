@@ -14,7 +14,7 @@
 
       <!-- Logo & Title -->
       <div class="text-center mb-8">
-        <h1 class="text-2xl sm:text-3xl font-bold text-primary mb-2">FurniStyle</h1>
+        <h1 class="text-2xl sm:text-3xl font-bold text-primary mb-2">Continental Furniture Purwokerto</h1>
         <p class="text-gray-600 text-sm">Masuk ke akun Anda</p>
       </div>
 

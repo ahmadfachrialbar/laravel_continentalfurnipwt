@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Keranjang Belanja - Furnistyle</title>
+  <title>Keranjang Belanja - CFP</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
   <style>
@@ -123,7 +123,7 @@
                 {{ __('Proceed to Checkout') }}
               </a>
               @else
-              <a href="{{ route('login', ['redirect' => route('checkout')]) }}" class="block w-full text-center bg-primary text-white py-3 rounded-full font-semibold hover:opacity-90 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600" aria-label="{{ __('Login to proceed to checkout') }}">
+              <a href="{{ route('login', ['redirect' => route('checkout.index')]) }}" class="block w-full text-center bg-primary text-white py-3 rounded-full font-semibold hover:opacity-90 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600" aria-label="{{ __('Login to proceed to checkout') }}">
                 {{ __('Login or Register to Checkout') }}
               </a>
               @endauth

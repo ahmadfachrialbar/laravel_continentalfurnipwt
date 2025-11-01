@@ -96,6 +96,7 @@ class CheckoutController extends Controller
 
             return redirect()->route('checkout.success', $order->id)
                 ->with('success', 'Pesanan berhasil dibuat, lanjut ke pembayaran.');
+                
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);

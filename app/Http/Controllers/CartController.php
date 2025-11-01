@@ -33,7 +33,8 @@ class CartController extends Controller
             }
 
             session()->put('cart', $cart);
-            return back()->with('success', 'Produk berhasil ditambahkan ke keranjang!');
+            session(['redirect_after_login' => route('cart.index')]);
+            return redirect()->route('login')->with('info', 'Silakan login untuk melanjutkan.');
         }
 
         // Jika user sudah login → simpan ke database
@@ -76,7 +77,9 @@ class CartController extends Controller
                     'id' => $id,
                     'name' => $item['name'],
                     'price' => $item['price'],
-                    'image' => $item['image'],
+                    'image' => $item['image']
+                        ? asset('storage/' . $item['image'])
+                        : asset('assets/image/thumbnails/meja1.png'),
                     'category' => $item['category'] ?? 'Uncategorized',
                     'quantity' => $item['quantity'],
                 ];
@@ -84,7 +87,7 @@ class CartController extends Controller
         }
 
         $subtotal = $cartItems->sum(fn($item) => $item['price'] * $item['quantity']);
-        $totalPrice = $subtotal ;
+        $totalPrice = $subtotal;
 
         return view('pages.cart.index', compact('cartItems', 'subtotal', 'totalPrice'));
     }
