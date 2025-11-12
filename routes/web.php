@@ -9,7 +9,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\RajaOngkirController;
 
 Route::get('/', function () {
     return view('pages.home.index');
@@ -74,24 +74,19 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->group(function () {
     // Halaman utama checkout (form)
     Route::get('/checkout', [CheckoutController::class, 'index'])
-    ->middleware('auth.redirect')
-    ->name('checkout.index');
+        ->middleware('auth.redirect')
+        ->name('checkout.index');
 
     // Proses simpan order + lanjut pembayaran
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
     // Halaman sukses setelah checkout
     Route::get('/checkout/success/{id}', [CheckoutController::class, 'success'])->name('checkout.success');
-
-    
 });
 
-
-
-
-
-
-
-
-
+// RajaOngkir AJAX routes
+Route::get('/provinces', [RajaOngkirController::class, 'getProvinces']);
+Route::get('/cities/{provinceId}', [RajaOngkirController::class, 'getCities']);
+Route::get('/districts/{cityId}', [RajaOngkirController::class, 'getDistricts']);
+Route::post('/check-ongkir', [RajaOngkirController::class, 'checkOngkir']);
 

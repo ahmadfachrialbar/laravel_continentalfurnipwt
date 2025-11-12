@@ -36,6 +36,9 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('price')
                     ->required()
                     ->numeric(),
+                Forms\Components\TextInput::make('weight')
+                    ->required()
+                    ->numeric(),
                 Forms\Components\TextInput::make('stock')
                     ->required()
                     ->integer(),
@@ -56,6 +59,7 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('slug')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('price')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('weight')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('stock')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('category.name')->label('Category')->sortable()->searchable(),
                 Tables\Columns\ImageColumn::make('image'),

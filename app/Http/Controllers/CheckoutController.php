@@ -22,9 +22,13 @@ class CheckoutController extends Controller
             ->where('user_id', $userId)
             ->get();
 
-        // Hitung subtotal dari database
         $subtotal = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
-        $shipping = 15000;
+
+        // Hitung total berat otomatis (dalam gram)
+        $totalWeight = $cartItems->sum(fn($item) => $item->product->weight * $item->quantity);
+
+        // Ongkir sementara 0, nanti dihitung via AJAX RajaOngkir
+        $shipping = 0;
         $total = $subtotal + $shipping;
 
         return view('pages.checkout.index', [
@@ -32,6 +36,7 @@ class CheckoutController extends Controller
             'subtotal' => $subtotal,
             'shipping' => $shipping,
             'total' => $total,
+            'totalWeight' => $totalWeight,
         ]);
     }
 
@@ -96,7 +101,6 @@ class CheckoutController extends Controller
 
             return redirect()->route('checkout.success', $order->id)
                 ->with('success', 'Pesanan berhasil dibuat, lanjut ke pembayaran.');
-                
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
@@ -108,6 +112,4 @@ class CheckoutController extends Controller
         $order = Order::with('items.product')->findOrFail($id);
         return view('checkout.success', compact('order'));
     }
-
-    
 }
