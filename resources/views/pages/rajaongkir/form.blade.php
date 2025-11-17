@@ -74,7 +74,7 @@
 
     <!-- Hasil Ongkir -->
     <div class="results-container hidden mt-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">Hasil Perhitungan Ongkir</h3>
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">Pilih Ongkir</h3>
         <div id="results-ongkir" class="space-y-3"></div>
     </div>
 </div>

@@ -114,7 +114,7 @@
 
         <!-- Hasil Perhitungan Ongkos Kirim -->
         <div class="mt-8 p-6 bg-indigo-50 border border-indigo-200 rounded-lg results-container hidden">
-            <h2 class="text-xl font-semibold text-indigo-800 mb-4 text-center">Hasil Perhitungan Ongkos Kirim</h2>
+            <h2 class="text-xl font-semibold text-indigo-800 mb-4 text-center">Pilih Ongkir</h2>
             <div class="space-y-3" id="results-ongkir">
             </div>
         </div>
