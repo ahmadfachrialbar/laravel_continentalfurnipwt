@@ -1,7 +1,6 @@
 # 📊 Calculating KPI PT Anugrah Beton Nusantara
 
-Aplikasi **Continental Furnitur Purwokerto** ini dirancang sebagai online shop produk **Furnitur**   
-Fitur utama mencakup **Checkout produk**, **Hitung Ongkir**, **Pembayaran dengan mudah**
+Aplikasi **Continental Furnitur Purwokerto** merupakan sebuah platform online shop yang menjual produk furnitur dari mulai meja, kursi, dan lemari. Pengguna bisa melihat katalog produk, memilih barang yang disukai, lalu membelinya langsung lewat platform ini
 ---
 🖼 Tampilan Aplikasi
 <p align="center"> <img src="" alt="Homepage" width="600"><br> <i> Tampilan Homepage</i> </p> <p align="center"> <img src="" alt="Product" width="600"><br> <i>Tampilan Halaman Produk</i> </p> </p> <p align="center"> <img src="" alt="Cart" width="600"><br> <i>Tampilan Halaman Cart</i> </p>
