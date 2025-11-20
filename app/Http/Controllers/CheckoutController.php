@@ -3,36 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Checkout;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Cart;
+use App\Models\Order;
+use App\Models\OrderItem;
 
 class CheckoutController extends Controller
 {
     public function index()
     {
+        // Kode ini tetap sama, tidak ada masalah.
         $userId = Auth::id();
-
-        // Ambil cart dari database (bukan session)
         $cartItems = \App\Models\Cart::with('product')
             ->where('user_id', $userId)
             ->get();
 
         $subtotal = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
-
-        // Hitung total berat otomatis (dalam gram)
         $totalWeight = $cartItems->sum(fn($item) => $item->product->weight * $item->quantity);
-
-        // Ongkir sementara 0, nanti dihitung via AJAX RajaOngkir
         $shipping = 0;
         $total = $subtotal + $shipping;
 
         return view('pages.checkout.index', [
-            'cart' => $cartItems, // biar tetap sesuai Blade
+            'cart' => $cartItems,
             'subtotal' => $subtotal,
             'shipping' => $shipping,
             'total' => $total,
@@ -40,76 +36,93 @@ class CheckoutController extends Controller
         ]);
     }
 
-
-
     public function store(Request $request)
     {
+        
+        // dd($request->all()); 
+
         $request->validate([
-            'address' => 'required|string|max:255',
-            'city' => 'required|string|max:100',
-            'postal_code' => 'required|string|max:10',
-            'phone' => 'required|string|max:20',
+            'full_name'     => 'required|string|max:255',
+            'phone'         => 'required|string|max:20',
+            'shipping_address' => 'required|string',  // Sesuaikan nama field
+            'province_id'   => 'required',
+            'city_id'       => 'required',
+            'district_id'   => 'required',
+            'courier'       => 'nullable|string',
+            'weight'        => 'required|numeric',
+            'shipping_cost' => 'nullable|numeric',
         ]);
 
-        $user = auth()->user();
+        $userId = Auth::id();
+        $cartItems = Cart::with('product')
+            ->where('user_id', $userId)
+            ->get();
+
+        if ($cartItems->isEmpty()) {
+            return back()->with('error', 'Keranjang kosong.');
+        }
+
+        // Hitung total harga dari cart items (lebih akurat)
+        $totalPrice = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
+        $shippingCost = $request->shipping_cost ?? 0;
 
         DB::beginTransaction();
         try {
-            $carts = \App\Models\Cart::with('product')
-                ->where('user_id', $user->id)
-                ->get();
-
-            if ($carts->isEmpty()) {
-                return back()->withErrors(['error' => 'Keranjang kosong.']);
-            }
-
-            $total = $carts->sum(fn($item) => $item->product->price * $item->quantity);
-
-            // Buat order
+            // Simpan order - SESUAIKAN FIELD DENGAN FILLABLE MODEL
             $order = Order::create([
-                'user_id' => $user->id,
-                'address' => $request->address,
-                'city' => $request->city,
-                'postal_code' => $request->postal_code,
+                'user_id' => $userId,
+                'order_number' => 'ORD-' . time(),
+                'full_name' => $request->full_name,
                 'phone' => $request->phone,
-                'total' => $total,
+                'address' => $request->shipping_address,  // Gunakan 'address' sesuai fillable
+                'province_id' => $request->province_id,
+                'city_id' => $request->city_id,
+                'district_id' => $request->district_id,
+                'courier' => $request->courier,
+                'weight' => $request->weight,
+                'subtotal' => $totalPrice,  // Hitung subtotal
+                'shipping_cost' => $shippingCost,
+                'total' => $totalPrice + $shippingCost,  // Hitung total
                 'status' => 'pending',
+                'payment_status' => 'unpaid',
+                // Hapus field yang tidak ada di fillable atau tidak dikirim (misal postal_code, grand_total)
             ]);
 
-            // Simpan item dari cart ke order_items
-            foreach ($carts as $cartItem) {
+            // Simpan item produk - TAMBAHKAN SUBTOTAL
+            foreach ($cartItems as $item) {
+                $itemSubtotal = $item->product->price * $item->quantity;
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'product_id' => $cartItem->product_id,
-                    'quantity' => $cartItem->quantity,
-                    'price' => $cartItem->product->price,
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price' => $item->product->price,  // Ambil dari product, bukan $item->price (jika tidak ada)
+                    'subtotal' => $itemSubtotal,  // Hitung subtotal per item
                 ]);
             }
 
-            // Simpan placeholder untuk payment
-            Payment::create([
-                'order_id' => $order->id,
-                'method' => 'pending',
-                'status' => 'unpaid',
-                'amount' => $total,
-            ]);
-
-            // Hapus cart user setelah berhasil checkout
-            \App\Models\Cart::where('user_id', $user->id)->delete();
+            // Kosongkan cart
+            Cart::where('user_id', $userId)->delete();
 
             DB::commit();
 
-            return redirect()->route('checkout.success', $order->id)
-                ->with('success', 'Pesanan berhasil dibuat, lanjut ke pembayaran.');
+            // PERBAIKI NAMA ROUTE: Gunakan 'order.review' sesuai web.php
+            return redirect()->route('order.review', $order->id);
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+    }
+
+    // Method review dan success tetap sama
+    public function review($id)
+    {
+        $order = Order::with('orderItems.product')->findOrFail($id);
+        return view('pages.checkout.review', compact('order'));
     }
 
     public function success($id)
     {
-        $order = Order::with('items.product')->findOrFail($id);
+        $order = Order::with('orderItems.product')->findOrFail($id);
         return view('checkout.success', compact('order'));
     }
 }

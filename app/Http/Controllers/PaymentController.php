@@ -2,64 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Payment;
 use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\OrderItem;
+
 
 class PaymentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function process(Request $request, $orderId)
     {
-        //
+        // Ambil order berdasarkan ID
+        $order = Order::with('orderItems.product')->findOrFail($orderId);
+
+        // Untuk halaman sederhana, kita pass order ke view
+        return view('pages.checkout.payment', compact('order'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function confirm(Request $request, $orderId)
     {
-        //
-    }
+        // Placeholder untuk konfirmasi pembayaran
+        // Di sini Anda bisa tambahkan logika pembayaran nyata (misal update status payment)
+        $order = Order::findOrFail($orderId);
+        $order->update(['payment_status' => 'paid']);  // Update status sebagai contoh
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Payment $payment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Payment $payment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Payment $payment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Payment $payment)
-    {
-        //
+        // Redirect ke halaman success
+        return redirect()->route('checkout.success', $order->id);
     }
 }

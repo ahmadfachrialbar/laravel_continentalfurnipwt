@@ -11,13 +11,25 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'order_number',
+        'order_number',  // Tambahkan ini
+        'full_name',
+        'phone',
+        'address',  // Atau 'shipping_address' jika ingin konsisten
+        'province_id',
+        'city_id',
+        'district_id',
+        'postal_code',  // Tambahkan jika ingin simpan
+        'courier',
+        'weight',
+        'subtotal',
+        'shipping_cost',
+        'total',  // Atau 'grand_total' jika lebih suka
+        'shipping_status',  // Tambahkan jika ingin simpan
         'status',
-        'total_price',
-        'shipping_address',
-        'payment_status'
+        'payment_status',
     ];
 
+    // Relasi tetap sama
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -31,5 +43,20 @@ class Order extends Model
     public function payment()
     {
         return $this->hasOne(Payment::class);
+    }
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class);
     }
 }

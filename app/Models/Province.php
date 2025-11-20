@@ -6,7 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Province extends Model
 {
-    protected $fillable = ['name'];
+    // Matikan auto-increment
+    public $incrementing = false;
+
+    // Tipe primary key integer
+    protected $keyType = 'integer';
+
+    // Bisa diisi id dan name
+    protected $fillable = ['id', 'name'];
 
     public function cities()
     {

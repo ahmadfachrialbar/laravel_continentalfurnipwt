@@ -219,7 +219,7 @@
                     },
                     error: function(xhr) {
                         console.error('Error Response:', xhr.responseText);
-                        alert('Terjadi kesalahan saat menghitung ongkir. Cek console.');
+                        alert('Eror, Ongkir akan di informasikan manual oleh admin melalui Whatsapp setelah pesanan masuk');
                     },
                     complete: function() {
                         $('#loading-indicator').hide();

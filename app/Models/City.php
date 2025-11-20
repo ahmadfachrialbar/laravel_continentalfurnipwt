@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class City extends Model
 {
-    protected $fillable = ['province_id', 'name'];
+    public $incrementing = false;
+    protected $keyType = 'integer';
+    protected $fillable = ['id', 'province_id', 'name', 'type'];
 
     public function province()
     {
@@ -18,4 +20,3 @@ class City extends Model
         return $this->hasMany(District::class);
     }
 }
-
