@@ -2,25 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Models\User;
-
+use Illuminate\Support\Facades\Auth;
+use App\Models\Order;
 
 class ProfileController extends Controller
 {
+    // Halaman Profil
     public function index()
     {
         $user = Auth::user();
-        return view('pages.profile.index', compact('user'));
+
+        $orders = Order::with(['orderItems.product', 'province', 'city', 'district'])
+            ->where('user_id', $user->id)
+            ->latest()
+            ->get();
+
+        return view('pages.profile.index', compact('user', 'orders'));
     }
 
+    // Form Edit Profil
     public function edit()
     {
         $user = Auth::user();
         return view('pages.profile.edit', compact('user'));
     }
 
+    // Update Profil
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -33,6 +41,23 @@ class ProfileController extends Controller
 
         $user->update($request->only('name', 'email', 'phone'));
 
-        return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui!');
+        return redirect()->route('profile')
+            ->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    // Pesanan Saya
+    public function myOrders()
+    {
+        $orders = Order::with([
+            'orderItems.product',
+            'province',
+            'city',
+            'district'
+        ])
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
+
+        return view('pages.user.orders', compact('orders'));
     }
 }

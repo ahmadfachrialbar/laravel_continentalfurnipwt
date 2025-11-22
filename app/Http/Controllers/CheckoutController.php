@@ -16,7 +16,7 @@ class CheckoutController extends Controller
 {
     public function index()
     {
-        // Kode ini tetap sama, tidak ada masalah.
+        
         $userId = Auth::id();
         $cartItems = \App\Models\Cart::with('product')
             ->where('user_id', $userId)
@@ -84,8 +84,9 @@ class CheckoutController extends Controller
                 'shipping_cost' => $shippingCost,
                 'total' => $totalPrice + $shippingCost,  // Hitung total
                 'status' => 'pending',
-                'payment_status' => 'unpaid',
-                // Hapus field yang tidak ada di fillable atau tidak dikirim (misal postal_code, grand_total)
+                'shipping_status' => 'pending',
+                'payment_status' => 'pending',
+                
             ]);
 
             // Simpan item produk - TAMBAHKAN SUBTOTAL

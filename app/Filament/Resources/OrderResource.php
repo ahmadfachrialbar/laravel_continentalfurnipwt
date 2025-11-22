@@ -4,11 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Forms\Components\Repeater; 
+
 
 class OrderResource extends Resource
 {
@@ -19,6 +22,8 @@ class OrderResource extends Resource
     protected static ?string $navigationLabel = 'Orders';
     protected static ?string $pluralLabel = 'Orders';
     protected static ?string $modelLabel = 'Order';
+
+    
 
     public static function form(Form $form): Form
     {
@@ -31,16 +36,38 @@ class OrderResource extends Resource
                         Forms\Components\TextInput::make('phone')->required(),
                         Forms\Components\Textarea::make('address')->required(),
 
-                        Forms\Components\TextInput::make('postal_code'),
+                        
                     ])
                     ->columns(2),
+
+                Forms\Components\Section::make('Produk Info')
+                    ->schema([
+                        Repeater::make('orderItems')
+                            ->relationship('orderItems')  // relasi orderItems
+                            ->schema([
+                                Forms\Components\Select::make('product_id')
+                                    ->label('Product')
+                                    ->relationship('product', 'name')  // Relasi ke Product
+                                    ->searchable()
+                                    ->required(),
+                                Forms\Components\TextInput::make('quantity')
+                                    ->numeric()
+                                    ->required(),
+                                Forms\Components\TextInput::make('price')
+                                    ->numeric()
+                                    ->required(),
+                            ])
+                            ->columns(3)
+                            ->collapsible()
+                            ->defaultItems(1),
+                    ]),
 
                 Forms\Components\Section::make('Shipping')
                     ->schema([
                         // PROVINCE SELECT
                         Forms\Components\Select::make('province_id')
                             ->label('Province')
-                            ->relationship('province', 'name') // <-- tampilkan nama, simpan ID
+                            ->relationship('province', 'name')
                             ->searchable()
                             ->required(),
 
@@ -111,9 +138,15 @@ class OrderResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('phone'),
-
-
+                Tables\Columns\TextColumn::make('orderItems')
+                    ->label('Products')
+                    ->getStateUsing(function ($record) {
+                        return $record->orderItems->map(function ($item) {
+                            return $item->product->name . ' (Qty: ' . $item->quantity . ', Price: Rp ' . number_format($item->price, 0, ',', '.') . ')';
+                        })->join(', ');
+                    })
+                    ->wrap()
+                    ->limit(15),
 
                 Tables\Columns\TextColumn::make('courier')->badge(),
 

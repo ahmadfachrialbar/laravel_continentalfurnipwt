@@ -10,6 +10,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RajaOngkirController;
+use App\Http\Controllers\PaymentController;
 
 // HOME
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -40,7 +41,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/my-orders', [ProfileController::class, 'myOrders'])->name('profile.orders');
 });
+
 
 // CHECKOUT
 Route::middleware(['auth'])->group(function () {

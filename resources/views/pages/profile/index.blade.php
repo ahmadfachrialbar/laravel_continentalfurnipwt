@@ -35,14 +35,6 @@
 
                     <a href="" class="flex items-center gap-3 px-4 py-3 rounded-[10px] hover:bg-gray-50 font-semibold transition-all duration-300">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span>Alamat Saya</span>
-                    </a>
-
-                    <a href="" class="flex items-center gap-3 px-4 py-3 rounded-[10px] hover:bg-gray-50 font-semibold transition-all duration-300">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                         </svg>
                         <span>Ulasan Saya</span>
@@ -91,14 +83,56 @@
 
             <!-- pesanan saya -->
             <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-6">
-                <h2 class="font-bold text-xl mb-6">Pesanan Saya</h2>
+                <h2 class="font-bold text-xl mb-6 pb-5">Pesanan Saya</h2>
+
+                @if ($orders->isEmpty())
                 <p class="text-gray-500">Anda belum memiliki pesanan.</p>
+                @else
+                <div class="space-y-6">
+                    @foreach ($orders as $order)
+                    <div class="border border-gray-200 rounded-xl p-5">
+                        <div class="flex justify-between items-center mb-3">
+                            <p class="font-semibold text-lg">
+                                Order #{{ $order->order_number }}
+                            </p>
+                            <span class="text-sm px-3 py-1 rounded-full
+                            @if($order->status === 'completed') bg-green-100 text-green-700
+                            @elseif($order->status === 'processing') bg-yellow-100 text-yellow-700
+                            @else bg-gray-100 text-gray-700 @endif">
+                                {{ ucfirst($order->shipping_status) }}
+                            </span>
+                        </div>
+
+                        <p class="text-sm text-gray-600 mb-4">
+                            {{ $order->created_at->format('d M Y, H:i') }}
+                        </p>
+
+                        <div class="space-y-3">
+                            @foreach ($order->orderItems as $item)
+                            <div class="flex justify-between text-sm">
+                                <p class="text-gray-700">
+                                    {{ $item->product->name }} × {{ $item->quantity }}
+                                </p>
+                                <p class="font-semibold">
+                                    Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                </p>
+                            </div>
+                            @endforeach
+                        </div>
+
+                        <div class="border-t pt-3 mt-3 flex justify-between font-semibold">
+                            <p>Total</p>
+                            <p>Rp {{ number_format($order->total, 0, ',', '.') }}</p>
+                        </div>
+
+                        
+                    </div>
+                    @endforeach
+                </div>
+                @endif
             </div>
-            <!-- Alamat saya -->
-            <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-6">
-                <h2 class="font-bold text-xl mb-6">Alamat Saya</h2>
-                <p class="text-gray-500">Anda belum memiliki alamat.</p>
-            </div>
+
+            
             <!-- Ulasan saya -->
             <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-6">
                 <h2 class="font-bold text-xl mb-6">Ulasan Saya</h2>

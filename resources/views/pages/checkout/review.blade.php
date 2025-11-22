@@ -36,7 +36,7 @@
                 <div class="lg:col-span-2 space-y-[30px]">
 
                     <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-6 md:p-8">
-                        <h2 class="font-bold text-xl mb-6">Detail Pengiriman</h2>
+                        <h2 class="font-bold text-xl mb-6 pb-10">Detail Pesanan</h2>
 
                         <div class="space-y-4 text-sm">
 
@@ -52,7 +52,7 @@
 
                             <div class="flex justify-between">
                                 <span class="font-semibold text-gray-600">Alamat Lengkap</span>
-                                <span class="max-w-[60%] text-right">{{ $order->address }}</span>  <!-- Ganti shipping_address ke address -->
+                                <span class="max-w-[60%] text-right">{{ $order->address }}</span> <!-- Ganti shipping_address ke address -->
                             </div>
 
                             <div class="flex justify-between">
@@ -70,14 +70,27 @@
                                 <span>{{ $order->district->name ?? '-' }}</span>
                             </div>
 
+                            <div class="flex justify-between">
+                                <span class="font-semibold text-gray-600">Kurir</span>
+                                <span>{{ $order->courier ?? '-' }}</span>
+                            </div>
+
+                            <div class="flex justify-between">
+                                <span class="font-semibold text-gray-600">Status Pembayaran</span>
+                                <span>{{ $order->payment_status ?? '-' }}</span>
+                            </div>
+
                         </div>
                     </div>
 
-                    <!-- Catatan Ongkir Manual -->
-                    @if($order->shipping_status === 'manual')
+                    <!-- Catatan Ongkir manual -->
+                    @if($order->shipping_status === 'pending')
                     <div class="p-5 rounded-xl border border-yellow-300 bg-yellow-50 text-sm text-yellow-700">
                         Ongkir belum dapat dihitung otomatis.
                         Admin akan menghubungi Anda melalui WhatsApp untuk biaya pengiriman.
+                        <button onclick="window.location.href='https://wa.me/6285880232466{{ $order->phone }}'"
+                            class="mt-3 inline-block bg-yellow-300 text-yellow-900 py-2 px-0 rounded-full text-sm font-semibold hover:bg-yellow-400 transition-all duration-300">
+                            Hubungi Admin via WhatsApp
                     </div>
                     @endif
 
@@ -91,14 +104,14 @@
 
                         <!-- ITEMS -->
                         <div class="space-y-4 mb-6 max-h-[300px] overflow-y-auto pr-2">
-                            @foreach($order->orderItems as $item)  <!-- Ganti $orderItems ke $order->orderItems -->
+                            @foreach($order->orderItems as $item) <!-- Ganti $orderItems ke $order->orderItems -->
                             <div class="flex gap-4 pb-4 border-b border-[#E5E5E5] last:border-0">
                                 <img src="{{ asset('storage/' . $item->product->image) }}" class="w-16 h-16 rounded-lg object-cover">
                                 <div class="flex-1">
                                     <h3 class="font-semibold text-sm">{{ $item->product->name }}</h3>
                                     <p class="text-xs text-gray-500">Qty: {{ $item->quantity }}</p>
                                     <p class="font-semibold text-primary text-sm">
-                                        Rp {{ number_format($item->subtotal, 0, ',', '.') }}  <!-- Ganti total_price ke subtotal -->
+                                        Rp {{ number_format($item->subtotal, 0, ',', '.') }} <!-- Ganti total_price ke subtotal -->
                                     </p>
                                 </div>
                             </div>
@@ -109,7 +122,7 @@
                         <div class="border-t pt-4 text-sm space-y-2">
                             <div class="flex justify-between">
                                 <span>Subtotal</span>
-                                <span>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span>  <!-- Ganti total_price ke subtotal -->
+                                <span>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span> <!-- Ganti total_price ke subtotal -->
                             </div>
 
                             <div class="flex justify-between">
@@ -125,13 +138,14 @@
 
                             <div class="flex justify-between font-bold text-primary text-lg pt-2">
                                 <span>Total</span>
-                                <span>Rp {{ number_format($order->total, 0, ',', '.') }}</span>  <!-- Ganti grand_total ke total -->
+                                <span>Rp {{ number_format($order->total, 0, ',', '.') }}</span> <!-- Ganti grand_total ke total -->
                             </div>
                         </div>
 
+                       
                         <!-- BUTTON BAYAR -->
-                        <form action="{{ route('payment.process', $order->id) }}" method="POST" class="mt-6">
-                            @csrf
+                        <form action="{{ route('payment.process', $order->id) }}" method="GET" class="mt-6"> <!-- Ganti POST ke GET -->
+                            @csrf <!-- Opsional, hapus jika tidak perlu untuk GET -->
                             <button class="w-full bg-primary text-white py-4 rounded-full font-semibold hover:bg-primary/90 transition-all duration-300">
                                 Bayar Sekarang
                             </button>
