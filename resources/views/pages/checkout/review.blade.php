@@ -76,23 +76,30 @@
                             </div>
 
                             <div class="flex justify-between">
-                                <span class="font-semibold text-gray-600">Status Pembayaran</span>
-                                <span>{{ $order->payment_status ?? '-' }}</span>
+                                <span class="font-semibold text-gray-600">Status Pesanan</span>
+                                <span class="font-semibold text-secondary">{{ $order->status ?? '-' }}</span>
                             </div>
 
                         </div>
                     </div>
 
-                    <!-- Catatan Ongkir manual -->
-                    @if($order->shipping_status === 'pending')
+                    {{-- Jika ongkir belum ada (fallback manual) --}}
+                    @if(is_null($order->shipping_cost) || $order->shipping_cost == 0)
                     <div class="p-5 rounded-xl border border-yellow-300 bg-yellow-50 text-sm text-yellow-700">
-                        Ongkir belum dapat dihitung otomatis.
-                        Admin akan menghubungi Anda melalui WhatsApp untuk biaya pengiriman.
-                        <button onclick="window.location.href='https://wa.me/6285880232466{{ $order->phone }}'"
+                        Ongkir belum dapat dihitung otomatis. Admin akan menghubungi Anda melalui WhatsApp untuk biaya pengiriman.
+                        <button onclick="window.location.href='https://wa.me/6285880232466?text=Halo%20Admin%2C%20saya%20ingin%20konfirmasi%20ongkir%20untuk%20order%20{{ $order->order_number }}'"
                             class="mt-3 inline-block bg-yellow-300 text-yellow-900 py-2 px-0 rounded-full text-sm font-semibold hover:bg-yellow-400 transition-all duration-300">
                             Hubungi Admin via WhatsApp
+                        </button>
+                    </div>
+
+                    {{-- Jika ongkir sudah ada --}}
+                    @else
+                    <div class="p-5 rounded-xl border border-green-300 bg-green-50 text-sm text-green-700">
+                        Ongkir telah dihitung otomatis.
                     </div>
                     @endif
+
 
                 </div>
 
@@ -142,7 +149,7 @@
                             </div>
                         </div>
 
-                       
+
                         <!-- BUTTON BAYAR -->
                         <form action="{{ route('payment.process', $order->id) }}" method="GET" class="mt-6"> <!-- Ganti POST ke GET -->
                             @csrf <!-- Opsional, hapus jika tidak perlu untuk GET -->

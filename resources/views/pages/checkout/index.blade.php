@@ -185,34 +185,7 @@
     </div>
   </main>
 
-  <!-- AJAX SCRIPT INTEGRASI ONGKIR -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-  <script>
-    $(function() {
-      const token = $('meta[name="csrf-token"]').attr('content');
-
-      function formatCurrency(amount) {
-        return new Intl.NumberFormat('id-ID', {
-          style: 'currency',
-          currency: 'IDR',
-          minimumFractionDigits: 0
-        }).format(amount);
-      }
-
-      // ketika user klik hasil ongkir
-      $(document).on('click', '#results-ongkir .select-ongkir', function() {
-        const cost = $(this).data('cost');
-        const subtotal = parseFloat($('#subtotal').data('value')) || 0;
-        const total = subtotal + cost;
-
-        $('#shipping-amount').text(formatCurrency(cost));
-        $('#shipping-cost-hidden').val(cost);
-        $('#total-amount').text(formatCurrency(total));
-      });
-    });
-  </script>
-
 </body>
+
 
 </html>

@@ -28,7 +28,7 @@
       <div class="max-w-[1280px]  mx-auto px-[30px] md:px-[75px] pt-[50px]">
         <!-- Breadcrumb -->
         <div class="flex items-center gap-2 mb-8 text-sm">
-          <a href="{{ url('products') }}" class="text-gray-500 hover:text-primary transition-colors">Products</a>
+          <a href="{{ url('products') }}" class="text-gray-500 hover:text-primary transition-colors">Produk</a>
           <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
@@ -36,7 +36,7 @@
           <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
-          <span class="text-black transition-colors">Checkout</span>
+          
         </div>
         <!-- Header -->
         <div class="flex flex-col md:flex-row justify-between items-center mb-10">

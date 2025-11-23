@@ -188,3 +188,5 @@
         transition-duration: 300ms;
     }
 </style>
+
+client.publish(topic, json.dumps(sensor_data))

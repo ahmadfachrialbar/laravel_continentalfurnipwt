@@ -214,6 +214,8 @@
                             $('#shipping-amount').text(formatCurrency(ongkir));
                             $('#total-amount').text(formatCurrency(total));
 
+                            $('#shipping-cost-hidden').val(ongkir);
+
                             alert('Ongkir terpilih: ' + formatCurrency(ongkir));
                         });
                     },

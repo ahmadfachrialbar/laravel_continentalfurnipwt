@@ -16,7 +16,7 @@ class CheckoutController extends Controller
 {
     public function index()
     {
-        
+
         $userId = Auth::id();
         $cartItems = \App\Models\Cart::with('product')
             ->where('user_id', $userId)
@@ -38,8 +38,8 @@ class CheckoutController extends Controller
 
     public function store(Request $request)
     {
-        
-        // dd($request->all()); 
+
+        // dd($request->all());
 
         $request->validate([
             'full_name'     => 'required|string|max:255',
@@ -61,6 +61,12 @@ class CheckoutController extends Controller
         if ($cartItems->isEmpty()) {
             return back()->with('error', 'Keranjang kosong.');
         }
+
+        if ($request->shipping_cost === null && $request->courier) {
+            return back()->with('error', 'Harap pilih ongkir terlebih dahulu.');
+        }
+
+
 
         // Hitung total harga dari cart items (lebih akurat)
         $totalPrice = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
@@ -86,7 +92,7 @@ class CheckoutController extends Controller
                 'status' => 'pending',
                 'shipping_status' => 'pending',
                 'payment_status' => 'pending',
-                
+
             ]);
 
             // Simpan item produk - TAMBAHKAN SUBTOTAL
@@ -96,7 +102,7 @@ class CheckoutController extends Controller
                     'order_id' => $order->id,
                     'product_id' => $item->product_id,
                     'quantity' => $item->quantity,
-                    'price' => $item->product->price,  // Ambil dari product, bukan $item->price (jika tidak ada)
+                    'price' => $item->product->price,
                     'subtotal' => $itemSubtotal,  // Hitung subtotal per item
                 ]);
             }
