@@ -68,22 +68,19 @@ class OrderResource extends Resource
                         Forms\Components\Select::make('province_id')
                             ->label('Province')
                             ->relationship('province', 'name')
-                            ->searchable()
-                            ->required(),
+                            ->searchable(),
 
                         // CITY SELECT
                         Forms\Components\Select::make('city_id')
                             ->label('City')
                             ->relationship('city', 'name')
-                            ->searchable()
-                            ->required(),
+                            ->searchable(),
 
                         // DISTRICT SELECT
                         Forms\Components\Select::make('district_id')
                             ->label('District')
                             ->relationship('district', 'name')
-                            ->searchable()
-                            ->required(),
+                            ->searchable(),
 
                         Forms\Components\TextInput::make('courier')->required(),
                         Forms\Components\TextInput::make('weight')->numeric()->required(),

@@ -1,4 +1,4 @@
-# 📊 Calculating KPI PT Anugrah Beton Nusantara
+# E commerce Continental Furnitur Purwokerto
 
 Aplikasi **Continental Furnitur Purwokerto** merupakan sebuah platform online shop yang menjual produk furnitur dari mulai meja, kursi, dan lemari. Pengguna bisa melihat katalog produk, memilih barang yang disukai, lalu membelinya langsung lewat platform ini
 ---
@@ -7,7 +7,7 @@ Aplikasi **Continental Furnitur Purwokerto** merupakan sebuah platform online sh
 
 ---
 ## 👨‍💻 **Dikembangkan Oleh**
-<p align="center"> <img src="https://avatars.githubusercontent.com/u/9919?s=200&v=4" width="120" style="border-radius:50%;" alt="Foto Profil"> </p> <h3 align="center">Ahmad Fachri Albar</h3> <p align="center"> <b>Mahasiswa Program Studi Sistem Informasi</b><br> <b>Telkom University Purwokerto</b> </p> <p align="center"> <a href="https://github.com/ahmadfachrialbar" target="_blank"> <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/> </a> <a href="mailto:ahmadfachri846@gmail.com" target="_blank"> <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/> </a> <a href="https://www.linkedin.com/in/ahmad-fachri-albar-98a135273/" target="_blank"> <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/> </a> </p>
+<!-- <p align="center"> <img src="https://avatars.githubusercontent.com/u/9919?s=200&v=4" width="120" style="border-radius:50%;" alt="Foto Profil"> </p> <h3 align="center">Ahmad Fachri Albar</h3> <p align="center"> <b>Mahasiswa Program Studi Sistem Informasi</b><br> <b>Telkom University Purwokerto</b> </p> <p align="center"> <a href="https://github.com/ahmadfachrialbar" target="_blank"> <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/> </a> <a href="mailto:ahmadfachri846@gmail.com" target="_blank"> <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/> </a> <a href="https://www.linkedin.com/in/ahmad-fachri-albar-98a135273/" target="_blank"> <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/> </a> </p> -->
 
 
 ## 🚀 **Fitur Utama**

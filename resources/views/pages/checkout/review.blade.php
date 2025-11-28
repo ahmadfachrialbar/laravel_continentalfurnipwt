@@ -57,17 +57,17 @@
 
                             <div class="flex justify-between">
                                 <span class="font-semibold text-gray-600">Provinsi</span>
-                                <span>{{ $order->province->name ?? '-' }}</span>
+                                <span>{{ $order->province_name ?? '-' }}</span>
                             </div>
 
                             <div class="flex justify-between">
                                 <span class="font-semibold text-gray-600">Kota</span>
-                                <span>{{ $order->city->name ?? '-' }}</span>
+                                <span>{{ $order->city_name ?? '-' }}</span>
                             </div>
 
                             <div class="flex justify-between">
                                 <span class="font-semibold text-gray-600">Kecamatan</span>
-                                <span>{{ $order->district->name ?? '-' }}</span>
+                                <span>{{ $order->district_name ?? '-' }}</span>
                             </div>
 
                             <div class="flex justify-between">
@@ -86,7 +86,7 @@
                     {{-- Jika ongkir belum ada (fallback manual) --}}
                     @if(is_null($order->shipping_cost) || $order->shipping_cost == 0)
                     <div class="p-5 rounded-xl border border-yellow-300 bg-yellow-50 text-sm text-yellow-700">
-                        Ongkir belum dapat dihitung otomatis. Admin akan menghubungi Anda melalui WhatsApp untuk biaya pengiriman.
+                        Ongkir akan dihitung oleh admin setelah anda konfirmasi melalui Whatsapp. Tunggu sampai ongkir muncul lalu lakukan pembayaran
                         <button onclick="window.location.href='https://wa.me/6285880232466?text=Halo%20Admin%2C%20saya%20ingin%20konfirmasi%20ongkir%20untuk%20order%20{{ $order->order_number }}'"
                             class="mt-3 inline-block bg-yellow-300 text-yellow-900 py-2 px-0 rounded-full text-sm font-semibold hover:bg-yellow-400 transition-all duration-300">
                             Hubungi Admin via WhatsApp
@@ -145,7 +145,7 @@
 
                             <div class="flex justify-between font-bold text-primary text-lg pt-2">
                                 <span>Total</span>
-                                <span>Rp {{ number_format($order->total, 0, ',', '.') }}</span> <!-- Ganti grand_total ke total -->
+                                <span>Rp {{ number_format($order->subtotal + $order->shipping_cost, 0, ',', '.') }}</span>
                             </div>
                         </div>
 

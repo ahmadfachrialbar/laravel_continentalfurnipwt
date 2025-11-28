@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowchart Website Calculating KPI</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .controls {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        #canvas-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button onclick="downloadFlowchart()">📥 Download Flowchart (PNG)</button>
+        <button onclick="downloadFlowchartJPG()">📥 Download Flowchart (JPG)</button>
+    </div>
+    
+    <div id="canvas-container">
+        <canvas id="flowchart"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('flowchart');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        canvas.width = 1400;
+        canvas.height = 2800;
+        
+        // Fill white background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Helper functions
+        function drawRect(x, y, w, h, fillColor, strokeColor, text, fontSize = 11) {
+            ctx.fillStyle = fillColor;
+            ctx.strokeStyle = strokeColor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(x, y, w, h, 5);
+            ctx.fill();
+            ctx.stroke();
+            
+            if (text) {
+                ctx.fillStyle = '#000000';
+                ctx.font = `${fontSize}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                if (Array.isArray(text)) {
+                    const lineHeight = fontSize + 2;
+                    const startY = y + h/2 - (text.length - 1) * lineHeight / 2;
+                    text.forEach((line, i) => {
+                        ctx.fillText(line, x + w/2, startY + i * lineHeight);
+                    });
+                } else {
+                    ctx.fillText(text, x + w/2, y + h/2);
+                }
+            }
+        }
+        
+        function drawEllipse(x, y, w, h, fillColor, strokeColor, text) {
+            ctx.fillStyle = fillColor;
+            ctx.strokeStyle = strokeColor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.ellipse(x, y, w, h, 0, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+            
+            if (text) {
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 11px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(text, x, y);
+            }
+        }
+        
+        function drawDiamond(x, y, w, h, fillColor, strokeColor, text) {
+            ctx.fillStyle = fillColor;
+            ctx.strokeStyle = strokeColor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, y - h);
+            ctx.lineTo(x + w, y);
+            ctx.lineTo(x, y + h);
+            ctx.lineTo(x - w, y);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            if (text) {
+                ctx.fillStyle = '#000000';
+                ctx.font = '11px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                if (Array.isArray(text)) {
+                    const lineHeight = 13;
+                    const startY = y - (text.length - 1) * lineHeight / 2;
+                    text.forEach((line, i) => {
+                        ctx.fillText(line, x, startY + i * lineHeight);
+                    });
+                } else {
+                    ctx.fillText(text, x, y);
+                }
+            }
+        }
+        
+        function drawArrow(x1, y1, x2, y2, color = '#333') {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            
+            // Arrow head
+            const angle = Math.atan2(y2 - y1, x2 - x1);
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(x2, y2);
+            ctx.lineTo(x2 - 10 * Math.cos(angle - Math.PI / 6), y2 - 10 * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(x2 - 10 * Math.cos(angle + Math.PI / 6), y2 - 10 * Math.sin(angle + Math.PI / 6));
+            ctx.closePath();
+            ctx.fill();
+        }
+        
+        function drawText(x, y, text, fontSize = 11, color = '#000000', align = 'center') {
+            ctx.fillStyle = color;
+            ctx.font = `${fontSize}px Arial`;
+            ctx.textAlign = align;
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, x, y);
+        }
+        
+        // Draw flowchart
+        // Title
+        ctx.fillStyle = '#1a1a1a';
+        ctx.font = 'bold 24px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('FLOWCHART WEBSITE CALCULATING KPI', 700, 30);
+        
+        // START
+        drawEllipse(700, 80, 60, 30, '#4CAF50', '#2e7d32', 'START');
+        drawArrow(700, 110, 700, 140);
+        
+        // Login Page
+        drawRect(620, 140, 160, 50, '#90CAF9', '#1976D2', ['Halaman Login', '(Input Username', '& Password)'], 11);
+        drawArrow(700, 190, 700, 220);
+        
+        // Validation Decision
+        drawDiamond(700, 260, 80, 40, '#FFF9C4', '#F57F17', ['Validasi', 'Kredensial', 'Valid?']);
+        drawArrow(620, 260, 550, 260);
+        drawArrow(550, 260, 550, 165);
+        drawArrow(550, 165, 620, 165);
+        drawText(560, 255, 'Tidak', 9);
+        drawArrow(700, 300, 700, 330);
+        drawText(720, 320, 'Ya', 9);
+        
+        // Role Check
+        drawDiamond(700, 370, 80, 40, '#E1BEE7', '#7B1FA2', ['Cek Role', 'User']);
+        
+        // KARYAWAN SECTION
+        ctx.fillStyle = '#E3F2FD';
+        ctx.strokeStyle = '#2196F3';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.roundRect(50, 440, 380, 1180, 10);
+        ctx.fill();
+        ctx.stroke();
+        
+        drawRect(50, 440, 380, 40, '#2196F3', '#1565C0', null);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 16px Arial';
+        ctx.fillText('KARYAWAN', 240, 465);
+        
+        drawArrow(620, 370, 240, 370, '#2196F3');
+        drawArrow(240, 370, 240, 490, '#2196F3');
+        drawText(430, 365, 'Karyawan', 9);
+        
+        drawRect(140, 490, 200, 50, '#2196F3', '#1565C0', null);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '11px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Dashboard Karyawan', 240, 510);
+        ctx.font = '9px Arial';
+        ctx.fillText('(Diagram Total KPI', 240, 525);
+        ctx.fillText('& Total Score)', 240, 535);
+        
+        drawArrow(240, 540, 240, 570, '#2196F3');
+        
+        drawRect(140, 570, 200, 35, '#64B5F6', '#1976D2', '1. Data KPI (View Only)');
+        drawArrow(240, 605, 240, 625, '#2196F3');
+        
+        drawRect(140, 625, 200, 50, '#64B5F6', '#1976D2', null);
+        ctx.fillStyle = '#000000';
+        ctx.font = '11px Arial';
+        ctx.fillText('2. Hitung KPI', 240, 645);
+        ctx.font = '9px Arial';
+        ctx.fillText('(Input Simulasi &', 240, 660);
+        ctx.fillText('Perhitungan Score)', 240, 670);
+        
+        drawArrow(240, 675, 240, 700, '#2196F3');
+        
+        // Detail Hitung KPI
+        const detailSteps = [
+            { y: 700, text: ['Tampil Daftar KPI', 'Karyawan'] },
+            { y: 760, text: ['Input Nilai Simulasi', 'Tambahan per KPI'] },
+            { y: 820, text: ['Klik Button', 'Hitung KPI'] },
+            { y: 880, text: ['Tampil Score KPI', 'Karyawan'] },
+            { y: 940, text: ['Data Otomatis Tersimpan', 'ke Resume KPI'] }
+        ];
+        
+        detailSteps.forEach((step, i) => {
+            drawRect(120, step.y, 240, 40, '#BBDEFB', '#1976D2', null);
+            ctx.fillStyle = '#000000';
+            ctx.font = '9px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(step.text[0], 240, step.y + 17);
+            ctx.fillText(step.text[1], 240, step.y + 30);
+            if (i < detailSteps.length - 1) {
+                drawArrow(240, step.y + 40, 240, step.y + 60, '#2196F3');
+            }
+        });
+        
+        drawArrow(240, 980, 240, 1010, '#2196F3');
+        
+        drawRect(140, 1010, 200, 50, '#64B5F6', '#1976D2', null);
+        ctx.fillStyle = '#000000';
+        ctx.font = '11px Arial';
+        ctx.fillText('3. Laporan Hasil KPI', 240, 1030);
+        ctx.font = '9px Arial';
+        ctx.fillText('(Download Laporan', 240, 1045);
+        ctx.fillText('Excel)', 240, 1055);
+        
+        drawArrow(240, 1060, 240, 1080, '#2196F3');
+        
+        drawRect(140, 1080, 200, 50, '#64B5F6', '#1976D2', null);
+        ctx.fillStyle = '#000000';
+        ctx.font = '11px Arial';
+        ctx.fillText('4. Panduan & Kontak', 240, 1100);
+        ctx.font = '9px Arial';
+        ctx.fillText('(View Only)', 240, 1115);
+        
+        drawArrow(240, 1130, 240, 1150, '#2196F3');
+        
+        drawRect(140, 1150, 200, 35, '#64B5F6', '#1976D2', '5. Profile (Edit Profile)');
+        drawArrow(240, 1185, 240, 1210, '#2196F3');
+        
+        drawRect(140, 1210, 200, 35, '#64B5F6', '#1976D2', '6. Chatbot Panduan');
+        drawArrow(240, 1245, 240, 1290, '#2196F3');
+        
+        // DIREKSI SECTION
+        ctx.fillStyle = '#E8F5E9';
+        ctx.strokeStyle = '#4CAF50';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.roundRect(460, 440, 380, 880, 10);
+        ctx.fill();
+        ctx.stroke();
+        
+        drawRect(460, 440, 380, 40, '#4CAF50', '#2E7D32', null);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 16px Arial';
+        ctx.fillText('DIREKSI', 650, 465);
+        
+        drawArrow(700, 410, 700, 440, '#4CAF50');
+        drawArrow(700, 440, 650, 440, '#4CAF50');
+        drawArrow(650, 440, 650, 490, '#4CAF50');
+        drawText(720, 430, 'Direksi', 9);
+        
+        drawRect(550, 490, 200, 50, '#4CAF50', '#2E7D32', null);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '11px Arial';
+        ctx.fillText('Dashboard Direksi', 650, 510);
+        ctx.font = '9px Arial';
+        ctx.fillText('(Diagram Total Karyawan', 650, 525);
+        ctx.fillText('& Batang Score KPI)', 650, 535);
+        
+        drawArrow(650, 540, 650, 570, '#4CAF50');
+        
+        drawRect(550, 570, 200, 50, '#81C784', '#388E3C', null);
+        ctx.fillStyle = '#000000';
+        ctx.font = '11px Arial';
+        ctx.fillText('1. Data Karyawan', 650, 590);
+        ctx.font = '9px Arial';
+        ctx.fillText('(View Only)', 650, 605);
+        
+        drawArrow(650, 620, 650, 650, '#4CAF50');
+        
+        drawRect(550, 650, 200, 50, '#81C784', '#388E3C', null);
+        ctx.fillStyle = '#000000';
+        ctx.font = '11px Arial';
+        ctx.fillText('2. Resume KPI', 650, 670);
+        ctx.font = '9px Arial';
+        ctx.fillText('(Tabel Score Seluruh', 650, 685);
+        ctx.fillText('Karyawan - View Only)', 650, 695);
+        
+        drawArrow(650, 700, 650, 730, '#4CAF50');
+        
+        drawRect(550, 730, 200, 35, '#81C784', '#388E3C', '3. Chatbot Panduan');
+        drawArrow(650, 765, 650, 795, '#4CAF50');
+        
+        drawRect(550, 795, 200, 35, '#81C784', '#388E3C', '4. Profile (Edit Profile)');
+        drawArrow(650, 830, 650, 880, '#4CAF50');
+        
+        // ADMIN SECTION
+        ctx.fillStyle = '#FFF3E0';
+        ctx.strokeStyle = '#FF9800';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.roundRect(870, 440, 480, 1400, 10);
+        ctx.fill();
+        ctx.stroke();
+        
+        drawRect(870, 440, 480, 40, '#FF9800', '#E65100', null);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 16px Arial';
+        ctx.fillText('ADMIN', 1110, 465);
+        
+        drawArrow(780, 370, 1110, 370, '#FF9800');
+        drawArrow(1110, 370, 1110, 490, '#FF9800');
+        drawText(945, 365, 'Admin', 9);
+        
+        drawRect(1010, 490, 200, 50, '#FF9800', '#E65100', null);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '11px Arial';
+        ctx.fillText('Dashboard Admin', 1110, 510);
+        ctx.font = '9px Arial';
+        ctx.fillText('(Diagram Total Karyawan', 1110, 525);
+        ctx.fillText('& Batang Score KPI)', 1110, 535);
+        
+        const adminMenus = [
+            { y: 570, text: '1. Data Karyawan', sub: '(CRUD)' },
+            { y: 650, text: '2. Data KPI', sub: '(Seluruh Karyawan - CRUD)' },
+            { y: 730, text: '3. KPI Record', sub: '(Riwayat Perhitungan - Delete)' },
+            { y: 810, text: '4. Jabatan (CRUD)', sub: null, h: 35 },
+            { y: 875, text: '5. Resume KPI', sub: '(Tabel Score - Show & Delete)' },
+            { y: 955, text: '6. Panduan & Kontak', sub: '(CRUD)' },
+            { y: 1035, text: '7. Chatbot Panduan', sub: null, h: 35 },
+            { y: 1100, text: '8. Profile (Edit Profile)', sub: null, h: 35 }
+        ];
+        
+        let prevY = 540;
+        adminMenus.forEach((menu, i) => {
+            drawArrow(1110, prevY, 1110, menu.y, '#FF9800');
+            const h = menu.h || 50;
+            drawRect(1010, menu.y, 200, h, '#FFB74D', '#F57C00', null);
+            ctx.fillStyle = '#000000';
+            ctx.font = '11px Arial';
+            ctx.textAlign = 'center';
+            if (menu.sub) {
+                ctx.fillText(menu.text, 1110, menu.y + 20);
+                ctx.font = '9px Arial';
+                if (menu.sub.includes('KPI Record')) {
+                    ctx.fillText('(Riwayat Perhitungan', 1110, menu.y + 35);
+                    ctx.fillText('- Delete)', 1110, menu.y + 45);
+                } else if (menu.sub.includes('Seluruh')) {
+                    ctx.fillText('(Seluruh Karyawan', 1110, menu.y + 35);
+                    ctx.fillText('- CRUD)', 1110, menu.y + 45);
+                } else if (menu.sub.includes('Tabel')) {
+                    ctx.fillText('(Tabel Score - Show', 1110, menu.y + 35);
+                    ctx.fillText('& Delete)', 1110, menu.y + 45);
+                } else {
+                    ctx.fillText(menu.sub, 1110, menu.y + 30);
+                }
+            } else {
+                ctx.fillText(menu.text, 1110, menu.y + h/2);
+            }
+            prevY = menu.y + h;
+        });
+        
+        drawArrow(1110, 1135, 1110, 1380, '#FF9800');
+        
+        // Converge to Logout
+        drawArrow(240, 1290, 240, 2400, '#2196F3');
+        drawArrow(240, 2400, 700, 2400, '#2196F3');
+        drawArrow(650, 880, 650, 2400, '#4CAF50');
+        drawArrow(650, 2400, 700, 2400, '#4CAF50');
+        drawArrow(1110, 1380, 1110, 2400, '#FF9800');
+        drawArrow(1110, 2400, 700, 2400, '#FF9800');
+        
+        // Logout Decision
+        drawDiamond(700, 2440, 80, 40, '#FFCDD2', '#C62828', 'Logout?');
+        
+        drawArrow(780, 2440, 850, 2440);
+        drawArrow(850, 2440, 850, 80);
+        drawArrow(850, 80, 760, 80);
+        drawText(860, 2435, 'Tidak', 9);
+        
+        drawArrow(700, 2480, 700, 2520);
+        drawText(720, 2505, 'Ya', 9);
+        
+        // Back to Login
+        drawRect(620, 2520, 160, 50, '#90CAF9', '#1976D2', ['Kembali ke', 'Halaman Login']);
+        drawArrow(700, 2570, 700, 2600);
+        
+        // END
+        drawEllipse(700, 2630, 60, 30, '#F44336', '#B71C1C', 'END');
+        
+        // Legend
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(50, 2700, 400, 80, 5);
+        ctx.fill();
+        ctx.stroke();
+        
+        ctx.fillStyle = '#000000';
+        ctx.font = 'bold 11px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText('KETERANGAN:', 60, 2720);
+        
+        drawRect(60, 2730, 30, 15, '#2196F3', '#1565C0', null);
+        ctx.fillStyle = '#000000';
+        ctx.font = '9px Arial';
+        ctx.fillText('= Karyawan', 95, 2740);
+        
+        drawRect(180, 2730, 30, 15, '#4CAF50', '#2E7D32', null);
+        ctx.fillText('= Direksi', 215, 2740);
+        
+        drawRect(300, 2730, 30, 15, '#FF9800', '#E65100', null);
+        ctx.fillText('= Admin', 335, 2740);
+        
+        drawEllipse(75, 2760, 20, 10, '#4CAF50', '#2e7d32', null);
+        ctx.fillText('= Start/End', 100, 2763);
+        
+        drawRect(60, 2753, 30, 15, '#90CAF9', '#1976D2', null);
+        ctx.fillText('= Process', 95, 2763);
+        
+        drawDiamond(190, 2770, 20, 10, '#FFF9C4', '#F57F17', null);
+        ctx.fillText('= Decision', 215, 2777);
+        
+        function downloadFlowchart() {
+            const link = document.createElement('a');
+            link.download = 'Flowchart-Website-Calculating-KPI.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        function downloadFlowchartJPG() {
+            const link = document.createElement('a');
+            link.download = 'Flowchart-Website-Calculating-KPI.jpg';
+            link.href = canvas.toDataURL('image/jpeg', 1.0);
+            link.click();
+        }
+        
+        window.downloadFlowchart = downloadFlowchart;
+        window.downloadFlowchartJPG = downloadFlowchartJPG;
+    </script>
+</body>
+</html>

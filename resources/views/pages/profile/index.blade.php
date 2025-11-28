@@ -120,19 +120,52 @@
                             @endforeach
                         </div>
 
-                        <div class="border-t pt-3 mt-3 flex justify-between font-semibold">
+                        <div class="border-t flex justify-between font-semibold">
+                            <span>Ongkir</span>
+                            <span>
+                                @if($order->shipping_cost > 0)
+                                Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}
+                                @else
+                                <span class="text-yellow-600 font-medium">Belum ditentukan</span>
+                                @endif
+                            </span>
+                        </div>
+                        <div class="border-t flex justify-between font-semibold">
                             <p>Total</p>
-                            <p>Rp {{ number_format($order->total, 0, ',', '.') }}</p>
+                            <span>Rp {{ number_format($order->subtotal + $order->shipping_cost, 0, ',', '.') }}</span>
                         </div>
 
-                        
+                        <div class="border-t pt-3 mt-3 flex justify-between font-semibold">
+                            <p>Status Pembayaran</p>
+                            <span class="text-sm px-3 py-1 rounded-full
+                            @if($order->payment_status === 'paid') bg-green-100 text-green-700
+                            @elseif($order->payment_status === 'pending') bg-yellow-100 text-yellow-700
+                            @else bg-gray-100 text-gray-700 @endif">
+                                {{ ucfirst($order->payment_status) }}
+                            </span>
+                        </div>
+
+                        @if($order->payment_status === 'pending')
+                        <a href="{{ route('order.review', $order->id) }}"
+                            class="justify-between block w-fit bg-red-500 text-white px-4 py-0 rounded-full font-semiboldhover:bg-red-600 transition-all duration-300">
+                            Bayar Sekarang
+                        </a>
+
+                        @elseif($order->payment_status === 'paid')
+                        @elseif($order->payment_status === 'failed')
+                        @endif
+
+
+
+
+
                     </div>
                     @endforeach
                 </div>
                 @endif
             </div>
 
-            
+
             <!-- Ulasan saya -->
             <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-6">
                 <h2 class="font-bold text-xl mb-6">Ulasan Saya</h2>
@@ -188,5 +221,3 @@
         transition-duration: 300ms;
     }
 </style>
-
-client.publish(topic, json.dumps(sensor_data))

@@ -16,6 +16,8 @@
                 class="w-full border border-[#E5E5E5] rounded-[15px] px-5 py-3 bg-gray-50 focus:ring-2 focus:ring-secondary focus:border-transparent focus:outline-none transition-all duration-300">
                 <option value="">-- Memuat Provinsi --</option>
             </select>
+            <!-- Input hidden untuk nama provinsi -->
+            <input type="hidden" name="province_name" id="province_name">
         </div>
 
         <!-- Kota -->
@@ -25,6 +27,8 @@
                 class="w-full border border-[#E5E5E5] rounded-[15px] px-5 py-3 bg-gray-50 focus:ring-2 focus:ring-secondary focus:border-transparent focus:outline-none transition-all duration-300">
                 <option value="">-- Pilih Kota / Kabupaten --</option>
             </select>
+            <!-- Input hidden untuk nama kota -->
+            <input type="hidden" name="city_name" id="city_name">
         </div>
 
         <!-- Kecamatan -->
@@ -34,16 +38,17 @@
                 class="w-full border border-[#E5E5E5] rounded-[15px] px-5 py-3 bg-gray-50 focus:ring-2 focus:ring-secondary focus:border-transparent focus:outline-none transition-all duration-300">
                 <option value="">-- Pilih Kecamatan --</option>
             </select>
+            <!-- Input hidden untuk nama kecamatan -->
+            <input type="hidden" name="district_name" id="district_name">
         </div>
 
-        <!-- Berat -->
+        <!-- Berat (sudah ada) -->
         <div>
             <label class="block text-sm font-semibold text-gray-700 mb-2">Total Berat Barang (gram)</label>
             <input type="number" id="weight" name="weight" value="{{ $totalWeight }}" readonly
                 class="w-full border border-[#E5E5E5] rounded-[15px] px-5 py-3 bg-gray-100 focus:ring-2 focus:ring-secondary focus:border-transparent focus:outline-none transition-all duration-300" />
             <p class="text-xs text-gray-500 mt-1">*otomatis dihitung dari total produk di keranjang</p>
         </div>
-
     </div>
 
     <!-- Pilihan Kurir -->
@@ -103,13 +108,15 @@
         }).fail(function(jqXHR, textStatus, errorThrown) {
             console.error('Error loading provinces:', textStatus, errorThrown);
             $('#province').html('<option value="">-- Gagal memuat provinsi. Coba refresh halaman. --</option>');
-            // Opsional: Tampilkan toast atau alert
             alert('Data provinsi tidak dapat dimuat. API mungkin sedang down. Silakan coba lagi dalam beberapa menit.');
         });
 
-        // Provinsi -> Kota
+        // Provinsi -> Kota (dan set nama provinsi)
         $('#province').on('change', function() {
             let id = $(this).val();
+            let name = $(this).find('option:selected').text(); // Ambil teks opsi yang dipilih
+            $('#province_name').val(name); // Set ke input hidden
+
             $('#city').html('<option>Memuat kota...</option>').prop('disabled', true);
             $('#district').html('<option>-- Pilih Kecamatan --</option>').prop('disabled', true);
 
@@ -120,13 +127,18 @@
                         $('#city').append(`<option value="${v.id}">${v.name}</option>`);
                     });
                     $('#city').prop('disabled', false);
+                }).fail(function() {
+                    $('#city').html('<option value="">-- Gagal memuat kota. Coba pilih provinsi lain. --</option>');
                 });
             }
         });
 
-        // Kota -> Kecamatan
+        // Kota -> Kecamatan (dan set nama kota)
         $('#city').on('change', function() {
             let id = $(this).val();
+            let name = $(this).find('option:selected').text(); // Ambil teks opsi yang dipilih
+            $('#city_name').val(name); // Set ke input hidden
+
             $('#district').html('<option>Memuat kecamatan...</option>').prop('disabled', true);
 
             if (id) {
@@ -136,8 +148,16 @@
                         $('#district').append(`<option value="${v.id}">${v.name}</option>`);
                     });
                     $('#district').prop('disabled', false);
+                }).fail(function() {
+                    $('#district').html('<option value="">-- Gagal memuat kecamatan. Coba pilih kota lain. --</option>');
                 });
             }
+        });
+
+        // Set nama kecamatan saat change
+        $('#district').on('change', function() {
+            let name = $(this).find('option:selected').text(); // Ambil teks opsi yang dipilih
+            $('#district_name').val(name); // Set ke input hidden
         });
 
         // Hitung ongkir
@@ -221,7 +241,30 @@
                     },
                     error: function(xhr) {
                         console.error('Error Response:', xhr.responseText);
-                        alert('Eror, Ongkir akan di informasikan manual oleh admin melalui Whatsapp setelah pesanan masuk');
+                        // Fallback: Jika API gagal (misal limit), set ongkir ke 0 dan tampilkan opsi default
+                        $('#results-ongkir').empty();
+                        $('.results-container').removeClass('hidden');
+                        $('#results-ongkir').append(`
+                            <div class="select-shipping flex justify-between items-center p-4 bg-gray-50 border border-[#E5E5E5] rounded-[12px] shadow-sm cursor-pointer hover:border-indigo-500 transition"
+                                 data-cost="0">
+                                <span class="text-sm font-medium text-gray-700">
+                                    Default - Ongkir 0 (API Limit atau Error)
+                                </span>
+                                <span class="text-sm font-semibold text-primary">
+                                    ${formatCurrency(0)}
+                                </span>
+                            </div>
+                            
+                        `);
+                        // Auto-select dan update total
+                        const ongkir = 0;
+                        const subtotal = parseFloat($('#subtotal').data('value')) || 0;
+                        const total = subtotal + ongkir;
+                        $('#shipping-amount').text(formatCurrency(ongkir));
+                        $('#total-amount').text(formatCurrency(total));
+                        $('#shipping-cost-hidden').val(ongkir);
+                        $('.select-shipping').addClass('border-indigo-500 bg-indigo-50');
+                        alert('API Ongkir gagal. Ongkir diset ke 0. Anda tetap bisa checkout. Admin akan informasikan ongkir manual via WhatsApp.');
                     },
                     complete: function() {
                         $('#loading-indicator').hide();
