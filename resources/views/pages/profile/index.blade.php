@@ -165,12 +165,7 @@
                 @endif
             </div>
 
-
-            <!-- Ulasan saya -->
-            <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-6">
-                <h2 class="font-bold text-xl mb-6">Ulasan Saya</h2>
-                <p class="text-gray-500">Anda belum memiliki ulasan.</p>
-            </div>
+            @include('pages.profile.components.rating')
 
         </div>
     </div>

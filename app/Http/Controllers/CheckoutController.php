@@ -63,9 +63,7 @@ class CheckoutController extends Controller
             return back()->with('error', 'Keranjang kosong.');
         }
 
-        if (!$request->shipping_cost && $request->courier) {
-            return back()->with('error', 'Harap pilih ongkir terlebih dahulu.');
-        }
+        
 
         $totalPrice = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
         $shippingCost = $request->shipping_cost ?? 0;
@@ -116,7 +114,6 @@ class CheckoutController extends Controller
 
             DB::commit();
             return redirect()->route('order.review', $order->id);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());

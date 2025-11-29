@@ -15,4 +15,7 @@
 
         <!-- section 5 -->
         @include('components.sections.products')
+
+        <!-- section 6 -->
+        @include('components.sections.rating')
         @endsection

@@ -37,22 +37,21 @@
 
       <!-- Shop -->
       <div>
-        <h3 class="font-semibold text-lg mb-4">Shop</h3>
+        <h3 class="font-semibold text-lg mb-4">Link</h3>
         <ul class="space-y-3 text-sm text-white/80">
-          <li><a href="#" class="hover:text-secondary">Meja</a></li>
-          <li><a href="#" class="hover:text-secondary">Kursi</a></li>
-          <li><a href="#" class="hover:text-secondary">Lemari</a></li>
-          <li><a href="#" class="hover:text-secondary">Sofa</a></li>
+          <li><a href="/" class="hover:text-secondary">Beranda</a></li>
+          <li><a href="{{ url('/#categories') }}" class="hover:text-secondary">Kategori</a></li>
+          <li><a href="{{ url('/#about') }}" class="hover:text-secondary">Tentang kami</a></li>
+          <li><a href="{{ url('/#products') }}" class="hover:text-secondary">Produk</a></li>
         </ul>
       </div>
 
       <!-- Customer Service -->
       <div>
-        <h3 class="font-semibold text-lg mb-4">Customer Service</h3>
+        <h3 class="font-semibold text-lg mb-4">Panduan</h3>
         <ul class="space-y-3 text-sm text-white/80">
-          <li><a href="#" class="hover:text-secondary">Cara Pemesanan</a></li>
-          <li><a href="#" class="hover:text-secondary">Pengiriman</a></li>
-          <li><a href="#" class="hover:text-secondary">Garansi Produk</a></li>
+          <li><a href="#" class="hover:text-secondary">Lihat panduan</a></li>
+    
         </ul>
       </div>
 
@@ -60,9 +59,9 @@
       <div>
         <h3 class="font-semibold text-lg mb-4">Kontak</h3>
         <ul class="space-y-3 text-sm text-white/80">
-          <li>📍 Purwokerto, Indonesia</li>
-          <li>📧 cfp@gmail.com</li>
-          <li>📞 +62885117044989</li>
+          <li>📍 Jl. Raya Karanglewas No. 25, Banyumas, Jawa Tengah, Indonesia</li>
+          <li>📧 continentalfurniturpwt@gmail.com</li>
+          <li>📞 085117044989</li>
         </ul>
       </div>
     </div>
