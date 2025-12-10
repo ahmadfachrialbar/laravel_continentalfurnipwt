@@ -151,20 +151,37 @@
 
 
                         <!-- BUTTON BAYAR -->
-                        <form action="{{ route('payment.process', $order->id) }}" method="GET" class="mt-6"> <!-- Ganti POST ke GET -->
-                            @csrf <!-- Opsional, hapus jika tidak perlu untuk GET -->
-                            <button class="w-full bg-primary text-white py-4 rounded-full font-semibold hover:bg-primary/90 transition-all duration-300">
-                                Bayar Sekarang
-                            </button>
-                        </form>
-
+                        <button type="button" id="pay-button"
+                            class="w-full bg-primary text-white py-4 rounded-full font-semibold hover:bg-primary/90 transition-all duration-300">
+                            Bayar Sekarang
+                        </button>
                     </div>
                 </div>
 
             </div>
         </div>
     </main>
+    
+    <!-- MIDTRANS SNAP JS -->
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}">
+    </script>
 
+    <script>
+    document.getElementById('pay-button').addEventListener('click', function () {
+        snap.pay('{{ $snapToken }}', {
+            onSuccess: function(result){
+                window.location.href = "/checkout/success/{{ $order->id }}";
+            },
+            onPending: function(result){
+                alert("Pembayaran pending");
+            },
+            onError: function(result){
+                alert("Pembayaran gagal");
+            }
+        });
+    });
+    </script>
 </body>
 
 </html>

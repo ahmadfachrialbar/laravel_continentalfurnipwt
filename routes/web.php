@@ -11,6 +11,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RajaOngkirController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\OrderController;
+
 
 // HOME
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -70,3 +72,7 @@ Route::get('/provinces', [RajaOngkirController::class, 'getProvinces']);
 Route::get('/cities/{provinceId}', [RajaOngkirController::class, 'getCities']);
 Route::get('/districts/{cityId}', [RajaOngkirController::class, 'getDistricts']);
 Route::post('/check-ongkir', [RajaOngkirController::class, 'checkOngkir']);
+
+
+// midtrans callback
+Route::post('/midtrans/callback', [App\Http\Controllers\PaymentController::class, 'callback']);

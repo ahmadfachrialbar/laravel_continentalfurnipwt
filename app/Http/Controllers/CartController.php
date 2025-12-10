@@ -55,6 +55,7 @@ class CartController extends Controller
      */
     public function index()
     {
+        
         if (Auth::check()) {
             $cartItems = Cart::with('product.category')
                 ->where('user_id', Auth::id())

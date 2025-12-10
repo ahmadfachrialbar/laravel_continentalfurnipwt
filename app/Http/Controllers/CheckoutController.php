@@ -11,28 +11,35 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Midtrans\Snap;
+use Midtrans\Config;
+use Midtrans\Notification;
 
 class CheckoutController extends Controller
 {
-    public function index()
-    {
-        $userId = Auth::id();
+public function index()
+{
+    $userId = Auth::id();
 
-        $cartItems = Cart::with('product')
-            ->where('user_id', $userId)
-            ->get();
+    $cartItems = Cart::with('product')
+        ->where('user_id', $userId)
+        ->get();
 
-        $subtotal = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
-        $totalWeight = $cartItems->sum(fn($item) => $item->product->weight * $item->quantity);
+    $subtotal = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
+    $totalWeight = $cartItems->sum(fn($item) => $item->product->weight * $item->quantity);
 
-        return view('pages.checkout.index', [
-            'cart' => $cartItems,
-            'subtotal' => $subtotal,
-            'shipping' => 0,
-            'total' => $subtotal,
-            'totalWeight' => $totalWeight,
-        ]);
-    }
+    $total = $subtotal; // total + shipping kalau ada
+
+    return view('pages.checkout.index', [
+        'cart' => $cartItems,
+        'subtotal' => $subtotal,
+        'shipping' => 0,
+        'total' => $total,
+        'totalWeight' => $totalWeight,
+        //'snapToken' => $snapToken,
+    ]);
+}
+
 
     public function store(Request $request)
     {
@@ -75,6 +82,7 @@ class CheckoutController extends Controller
             $order = Order::create([
                 'user_id' => $userId,
                 'order_number' => 'ORD-' . time(),
+                'order_id_midtrans' => 'ORDER-' . time(),
                 'full_name' => $request->full_name,
                 'phone' => $request->phone,
                 'address' => $request->shipping_address,
@@ -118,13 +126,41 @@ class CheckoutController extends Controller
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+
+        //midtrans
+
     }
 
-    public function review($id)
-    {
-        $order = Order::with('orderItems.product')->findOrFail($id);
-        return view('pages.checkout.review', compact('order'));
-    }
+public function review($id)
+{
+
+    $order = Order::with('orderItems.product')->findOrFail($id);
+    
+    //dd($order->order_id_midtrans);
+    \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+    \Midtrans\Config::$isProduction = false;
+    \Midtrans\Config::$isSanitized = true;
+    \Midtrans\Config::$is3ds = true;
+
+    $params = [
+        'transaction_details' => [
+            'order_id' => $order->order_id_midtrans,
+            'gross_amount' => $order->total,
+        ],
+
+        'customer_details' => [
+            'first_name' => $order->full_name,
+            'email' => auth()->user()->email,
+            'phone' => $order->phone,
+        ],
+    ];
+
+    $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+    return view('pages.checkout.review', compact('order', 'snapToken'));
+}
+
+
 
     public function success($id)
     {

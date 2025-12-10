@@ -12,6 +12,7 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'order_number',  // Tambahkan ini
+        'order_id_midtrans', //midtrans
         'full_name',
         'phone',
         'address',  // Atau 'shipping_address' jika ingin konsisten
