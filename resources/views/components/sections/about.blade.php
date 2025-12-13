@@ -1,10 +1,10 @@
 <section id="about" class="max-w-[1280px] mx-auto w-full space-y-[30px] md:space-y-[30px] space-y-[20px] md:px-[75px] px-[20px] md:pt-[50px] pt-[30px] md:pb-[50px] pb-[30px]">
     <div class="flex items-center justify-between px-[55px]">
         <h1 class="font-bold text-2xl leading-[34px]">
-          Tentang kami <br />
+            Tentang kami <br />
         </h1>
         <button class="rounded-full border py-3 px-6 font-semibold border-[#E5E5E5] hover:bg-primary hover:text-white hover:border-primary transition-all duration-300">Hubungi kami</button>
-      </div>
+    </div>
 
 
     <!-- Main About Content -->
@@ -12,18 +12,18 @@
         <!-- Left Content -->
         <div class="space-y-6 md:space-y-6 space-y-4">
             <div class="md:p-8 p-6 rounded-[20px] border border-[#E5E5E5] space-y-4 hover:ring-2 transition-all duration-300 hover:ring-secondary hover:border-transparent">
-                <h2 class="font-semibold md:text-xl text-lg md:leading-[28px] leading-[24px]">Cerita kami</h2>
+                <h2 class="font-semibold md:text-xl text-lg md:leading-[28px] leading-[24px]">Visi</h2>
                 <p class="text-sm leading-[24px] text-gray-600">
-                    Kami adalah Toko furnitur yang berdedikasi untuk menghadirkan kualitas, gaya, dan kenyamanan ke rumah Anda.
-                    Dari meja elegan hingga kursi ergonomis, kami merancang furnitur terbaik yang memadukan fungsionalitas dengan keunggulan estetika.
+                    Kami adalah Toko furnitur yang memproduksi sendiri, berkualitas, dan garansi terjamin. Semua ada di Continental Furniture!!
                 </p>
             </div>
 
             <div class="md:p-8 p-6 rounded-[20px] border border-[#E5E5E5] space-y-4 hover:ring-2 transition-all duration-300 hover:ring-secondary hover:border-transparent">
-                <h2 class="font-semibold md:text-xl text-lg md:leading-[28px] leading-[24px]">Misi kami</h2>
+                <h2 class="font-semibold md:text-xl text-lg md:leading-[28px] leading-[24px]">Misi</h2>
                 <p class="text-sm leading-[24px] text-gray-600">
-                    Untuk mengubah rumah menjadi rumah dengan menyediakan akses ke furnitur premium yang mencerminkan gaya unik Anda dan memenuhi kebutuhan Anda sehari-hari.
-                </p>
+                    kami menggabungkan keahlian bertahun-tahun dengan desain yang sepenuhnya disesuaikan untuk menciptakan
+                    furniture yang tidak hanya indah, tetapi juga fungsional. Setiap potongan dibuat dengan bahan berkualitas
+                    dan penuh perhatian terhadap detail, menjadikan ruang Anda lebih unik dan istimewa. </p>
             </div>
         </div>
 
@@ -83,25 +83,5 @@
     </div>
 
     <!-- Stats Section -->
-    <div class="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 md:gap-[30px] gap-4 px-[55px]">
-        <div class="md:p-6 p-5 rounded-[20px] border border-[#E5E5E5] text-center space-y-2 hover:ring-2 transition-all duration-300 hover:ring-secondary hover:border-transparent">
-            <h3 class="font-bold md:text-3xl text-2xl text-primary md:leading-[40px] leading-[32px]">500+</h3>
-            <p class="text-sm leading-[21px] text-gray-600">Produk Berkualitas</p>
-        </div>
 
-        <div class="md:p-6 p-5 rounded-[20px] border border-[#E5E5E5] text-center space-y-2 hover:ring-2 transition-all duration-300 hover:ring-secondary hover:border-transparent">
-            <h3 class="font-bold md:text-3xl text-2xl text-primary md:leading-[40px] leading-[32px]">10K+</h3>
-            <p class="text-sm leading-[21px] text-gray-600">Pelanggan Puas</p>
-        </div>
-
-        <div class="md:p-6 p-5 rounded-[20px] border border-[#E5E5E5] text-center space-y-2 hover:ring-2 transition-all duration-300 hover:ring-secondary hover:border-transparent">
-            <h3 class="font-bold md:text-3xl text-2xl text-primary md:leading-[40px] leading-[32px]">50+</h3>
-            <p class="text-sm leading-[21px] text-gray-600">Terpercaya</p>
-        </div>
-
-        <div class="md:p-6 p-5 rounded-[20px] border border-[#E5E5E5] text-center space-y-2 hover:ring-2 transition-all duration-300 hover:ring-secondary hover:border-transparent">
-            <h3 class="font-bold md:text-3xl text-2xl text-primary md:leading-[40px] leading-[32px]">24/7</h3>
-            <p class="text-sm leading-[21px] text-gray-600">Dukungan Pelanggan</p>
-        </div>
-    </div>
 </section>

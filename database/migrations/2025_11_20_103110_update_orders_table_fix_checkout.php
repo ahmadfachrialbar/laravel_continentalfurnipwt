@@ -41,7 +41,7 @@ return new class extends Migration
 
             // Tambah status pembayaran
             if (!Schema::hasColumn('orders', 'payment_status')) {
-                $table->string('payment_status')->default('unpaid')->after('status');
+                $table->string('payment_status')->default('pending')->after('status');
             }
         });
     }

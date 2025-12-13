@@ -20,6 +20,7 @@
       <li class="hover:text-secondary transition-all"><a href="{{ url('/#categories') }}">Kategori</a></li>
       <li class="hover:text-secondary transition-all"><a href="{{ url('/#about') }}">Tentang Kami</a></li>
       <li class="hover:text-secondary transition-all"><a href="{{ url('/#products') }}">Produk</a></li>
+      <li class="hover:text-secondary transition-all"><a href="{{ url('/#location') }}">Lokasi</a></li>
 
       <!-- Divider Mobile -->
       <li class="md:hidden"><div class="border-t border-white/30 my-2"></div></li>

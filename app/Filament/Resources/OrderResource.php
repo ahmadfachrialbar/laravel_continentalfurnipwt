@@ -10,7 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Forms\Components\Repeater; 
+use Filament\Forms\Components\Repeater;
 
 
 class OrderResource extends Resource
@@ -23,7 +23,7 @@ class OrderResource extends Resource
     protected static ?string $pluralLabel = 'Orders';
     protected static ?string $modelLabel = 'Order';
 
-    
+
 
     public static function form(Form $form): Form
     {
@@ -36,7 +36,7 @@ class OrderResource extends Resource
                         Forms\Components\TextInput::make('phone')->required(),
                         Forms\Components\Textarea::make('address')->required(),
 
-                        
+
                     ])
                     ->columns(2),
 
@@ -132,11 +132,40 @@ class OrderResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('full_name')
+                    ->label('Nama Pelanggan')
                     ->searchable()
                     ->sortable(),
 
+                Tables\Columns\SelectColumn::make('payment_status')
+                    ->label('Status Pembayaran')
+                    ->options([
+                        'pending' => 'Pending',
+                        'paid' => 'Paid',
+                        'failed' => 'Failed',
+                    ])
+                    ->sortable(),
+
+                Tables\Columns\SelectColumn::make('status')
+                    ->label('Status Pesanan')
+                    ->options([
+                        'pending' => 'Pending',
+                        'processing' => 'Processing',
+                        'completed' => 'Completed',
+                        'cancelled' => 'Cancelled',
+                    ])
+                    ->sortable(),
+
+                Tables\Columns\SelectColumn::make('shipping_status')
+                    ->label('Status Pengiriman')
+                    ->options([
+                        'pending' => 'Pending',
+                        'packed' => 'Packed',
+                        'shipped' => 'Shipped',
+                        'delivered' => 'Delivered',
+                    ])
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('orderItems')
-                    ->label('Products')
+                    ->label('Produk')
                     ->getStateUsing(function ($record) {
                         return $record->orderItems->map(function ($item) {
                             return $item->product->name . ' (Qty: ' . $item->quantity . ', Price: Rp ' . number_format($item->price, 0, ',', '.') . ')';
@@ -145,50 +174,33 @@ class OrderResource extends Resource
                     ->wrap()
                     ->limit(15),
 
-                Tables\Columns\TextColumn::make('courier')->badge(),
+                Tables\Columns\TextColumn::make('courier')
+                    ->badge()
+                    ->label('Kurir'),
 
                 Tables\Columns\TextColumn::make('subtotal')
                     ->money('IDR')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('shipping_cost')
+                    ->label('Ongkir')
                     ->money('IDR')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('total')
+                    ->label('Total')
                     ->money('IDR')
                     ->sortable(),
 
-                Tables\Columns\BadgeColumn::make('payment_status')
-                    ->colors([
-                        'warning' => 'pending',
-                        'success' => 'paid',
-                        'danger' => 'failed',
-                    ]),
-
-                Tables\Columns\BadgeColumn::make('status')
-                    ->colors([
-                        'warning' => 'pending',
-                        'info' => 'processing',
-                        'success' => 'completed',
-                        'danger' => 'cancelled',
-                    ]),
-
-                Tables\Columns\BadgeColumn::make('shipping_status')
-                    ->colors([
-                        'warning' => 'pending',
-                        'primary' => 'packed',
-                        'info' => 'shipped',
-                        'success' => 'delivered',
-                    ]),
 
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
                     ->dateTime('d M Y, H:i')
                     ->sortable(),
-                    ])
-                    ->defaultSort('created_at', 'desc')
-                    ->filters([])
-                    
+            ])
+            ->defaultSort('created_at', 'desc')
+
+
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

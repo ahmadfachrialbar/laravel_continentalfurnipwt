@@ -24,10 +24,10 @@ return new class extends Migration
 
             // Info ongkir
             $table->integer('shipping_cost')->default(0)->after('shipping_address');
-            $table->enum('shipping_status', ['calculated', 'manual'])
-                ->default('manual')
+            $table->enum('shipping_status', ['pending', 'packed', 'shipped', 'delivered'])
+                ->default('pending')
                 ->after('shipping_cost');
-            $table->text('note_admin')-> default('cek ongkir manual')->nullable()->after('shipping_status');
+            $table->string('note_admin')-> default('cek ongkir manual')->nullable()->after('shipping_status');
 
             // Grand total (subtotal + ongkir)
             $table->integer('grand_total')->default(0)->after('total_price');

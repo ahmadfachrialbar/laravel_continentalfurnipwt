@@ -5,10 +5,16 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-[40px] md:gap-[60px] items-center ml-[40px] mr-[40px]">
 
         <!-- Gambar Produk -->
-        <div class="bg-[#F9F9F9] p-8 md:p-10 rounded-[20px] flex justify-center">
-            <img src="{{ asset('storage/' . $product->image) }}"
-                alt="{{ $product->name }}"
-                class="h-[250px] md:h-[350px] object-contain">
+        <div class="sticky top-[100px]">
+            <div class="relative bg-gradient-to-br from-[#F9F9F9] to-[#F3F4F6] p-8 md:p-10 rounded-[24px] border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300">
+                <!-- Badge Premium -->
+                <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm">
+                    <span class="text-xs font-semibold text-primary">Premium Quality</span>
+                </div>
+                <img src="{{ asset('storage/' . $product->image) }}"
+                    alt="{{ $product->name }}"
+                    class="h-[250px] md:h-[380px] object-contain mx-auto hover:scale-105 transition-transform duration-500">
+            </div>
         </div>
 
         <!-- Deskripsi Produk -->
@@ -27,24 +33,37 @@
                 </span>
             </div>
 
+            <!-- Stok Produk -->
+            <div class="flex items-center gap-2">
+                <span class="text-gray-700 font-medium">Stok:</span>
+                <span class="text-gray-600">
+                    {{ $product->stock > 0 ? $product->stock : 'Habis' }}
+                </span>
+            </div>
+
             <div class="flex flex-wrap gap-4 pt-4">
                 <a href="{{ route('cart.add', $product->id) }}"
                     class="px-6 py-3 bg-primary text-white font-semibold rounded-full 
-          hover:bg-secondary transition-all duration-300">
+                  hover:bg-secondary transition-all duration-300">
                     Add to Cart
                 </a>
+
                 <a href="{{ route('cart.add', $product->id) }}"
                     class="px-6 py-3 border-2 border-primary text-primary font-semibold rounded-full 
-                               hover:bg-primary hover:text-white transition-all duration-300">
+                  hover:bg-primary hover:text-white transition-all duration-300">
                     Buy Now
                 </a>
             </div>
 
+            <!-- Category -->
             <div class="pt-8 border-t border-gray-200 space-y-3">
-                <h2 class="text-lg font-semibold text-gray-800">Category</h2>
-                <p class="text-gray-600">{{ $product->category->name ?? 'Uncategorized' }}</p>
+                <h2 class="text-lg font-semibold text-gray-800">Kategori</h2>
+                <p class="text-gray-600">
+                    {{ $product->category->name ?? 'Uncategorized' }}
+                </p>
             </div>
         </div>
+
     </div>
 
     <!-- Produk Lainnya -->

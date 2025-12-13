@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
 
+
 class CartController extends Controller
 {
     /**
@@ -55,7 +56,6 @@ class CartController extends Controller
      */
     public function index()
     {
-        
         if (Auth::check()) {
             $cartItems = Cart::with('product.category')
                 ->where('user_id', Auth::id())

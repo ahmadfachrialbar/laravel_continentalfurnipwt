@@ -59,7 +59,7 @@ class RajaOngkirController extends Controller
             'Accept' => 'application/json',
             'key'    => config('rajaongkir.api_key'),
         ])->post('https://rajaongkir.komerce.id/api/v1/calculate/domestic-cost', [
-            'origin'      => 3855, // ID kecamatan asal
+            'origin'      => 6132, // ID kecamatan Purwokerto Selatan
             'destination' => $request->input('district_id'),
             'weight'      => $request->input('weight'),
             'courier'     => $request->input('courier'),

@@ -60,11 +60,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/order/{id}/review', [CheckoutController::class, 'review'])->name('order.review');
 
     // success
-    Route::get('/checkout/success/{id}', [CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/success/{order_number}', [CheckoutController::class, 'success'])
+    ->name('checkout.success');
 
-    // Route untuk pembayaran
-    Route::get('/order/{id}/pay', [PaymentController::class, 'process'])->name('payment.process');
-    Route::post('/order/{id}/pay/confirm', [PaymentController::class, 'confirm'])->name('payment.confirm');
+    // detail order
+    Route::get('/checkout/{id}/detail', [CheckoutController::class, 'detail'])->name('order.detail');
+
+
+   
 });
 
 // AJAX RAJAONGKIR
@@ -74,5 +77,4 @@ Route::get('/districts/{cityId}', [RajaOngkirController::class, 'getDistricts'])
 Route::post('/check-ongkir', [RajaOngkirController::class, 'checkOngkir']);
 
 
-// midtrans callback
-Route::post('/midtrans/callback', [App\Http\Controllers\PaymentController::class, 'callback']);
+

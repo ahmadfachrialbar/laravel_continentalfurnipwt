@@ -33,13 +33,6 @@
                         <span>Pesanan Saya</span>
                     </a>
 
-                    <a href="" class="flex items-center gap-3 px-4 py-3 rounded-[10px] hover:bg-gray-50 font-semibold transition-all duration-300">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                        </svg>
-                        <span>Ulasan Saya</span>
-                    </a>
-
                     <button onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="w-full flex items-center gap-3 px-4 py-3 rounded-[10px] hover:bg-red-50 text-red-500 font-semibold transition-all duration-300">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -82,90 +75,127 @@
             </div>
 
             <!-- pesanan saya -->
-            <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-6">
-                <h2 class="font-bold text-xl mb-6 pb-5">Pesanan Saya</h2>
+            <div class="bg-white rounded-[20px] border border-[#E5E5E5] p-6 md:p-8">
+                <h2 class="font-bold text-xl mb-6 pb-5 border-b border-gray-100">Pesanan Saya</h2>
 
                 @if ($orders->isEmpty())
-                <p class="text-gray-500">Anda belum memiliki pesanan.</p>
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    <p class="text-gray-500 text-lg">Anda belum memiliki pesanan.</p>
+                    <a href="{{ url('/products') }}" class="inline-block mt-4 text-primary font-semibold hover:underline">
+                        Mulai Belanja
+                    </a>
+                </div>
                 @else
                 <div class="space-y-6">
                     @foreach ($orders as $order)
-                    <div class="border border-gray-200 rounded-xl p-5">
-                        <div class="flex justify-between items-center mb-3">
-                            <p class="font-semibold text-lg">
-                                Order #{{ $order->order_number }}
-                            </p>
-                            <span class="text-sm px-3 py-1 rounded-full
-                            @if($order->status === 'completed') bg-green-100 text-green-700
-                            @elseif($order->status === 'processing') bg-yellow-100 text-yellow-700
-                            @else bg-gray-100 text-gray-700 @endif">
-                                {{ ucfirst($order->shipping_status) }}
-                            </span>
-                        </div>
+                    <div class="border border-gray-200 rounded-xl p-5 md:p-6 hover:border-primary/30 transition-all duration-300">
 
-                        <p class="text-sm text-gray-600 mb-4">
-                            {{ $order->created_at->format('d M Y, H:i') }}
-                        </p>
-
-                        <div class="space-y-3">
-                            @foreach ($order->orderItems as $item)
-                            <div class="flex justify-between text-sm">
-                                <p class="text-gray-700">
-                                    {{ $item->product->name }} × {{ $item->quantity }}
+                        <!-- Header Order -->
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-3">
+                            <div>
+                                <p class="font-bold text-lg text-gray-800">
+                                    Order #{{ $order->order_number }}
                                 </p>
-                                <p class="font-semibold">
-                                    Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                <p class="text-sm text-gray-500 mt-1">
+                                    {{ $order->created_at->format('d M Y, H:i') }}
                                 </p>
                             </div>
-                            @endforeach
+                            <div class="flex flex-wrap gap-2">
+                                <!-- Status Pengiriman -->
+                                <span class="text-xs px-3 py-1.5 rounded-full font-medium
+                        @if($order->shipping_status === 'completed') bg-green-100 text-green-700
+                        @elseif($order->shipping_status === 'processing') bg-blue-100 text-blue-700
+                        @elseif($order->shipping_status === 'shipped') bg-purple-100 text-purple-700
+                        @else bg-gray-100 text-gray-700 @endif">
+                                    {{ ucfirst($order->shipping_status) }}
+                                </span>
+                                <!-- Status Pembayaran -->
+                                <span class="text-xs px-3 py-1.5 rounded-full font-medium
+                        @if($order->payment_status === 'paid') bg-green-100 text-green-700
+                        @elseif($order->payment_status === 'pending') bg-yellow-100 text-yellow-700
+                        @elseif($order->payment_status === 'failed') bg-red-100 text-red-700
+                        @else bg-gray-100 text-gray-700 @endif">
+                                    {{ $order->payment_status === 'paid' ? 'Dibayar' : ($order->payment_status === 'pending' ? 'Menunggu Pembayaran' : ucfirst($order->payment_status)) }}
+                                </span>
+                            </div>
                         </div>
 
-                        <div class="border-t flex justify-between font-semibold">
-                            <span>Ongkir</span>
-                            <span>
-                                @if($order->shipping_cost > 0)
-                                Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}
-                                @else
-                                <span class="text-yellow-600 font-medium">Belum ditentukan</span>
-                                @endif
-                            </span>
-                        </div>
-                        <div class="border-t flex justify-between font-semibold">
-                            <p>Total</p>
-                            <span>Rp {{ number_format($order->subtotal + $order->shipping_cost, 0, ',', '.') }}</span>
-                        </div>
-
-                        <div class="border-t pt-3 mt-3 flex justify-between font-semibold">
-                            <p>Status Pembayaran</p>
-                            <span class="text-sm px-3 py-1 rounded-full
-                            @if($order->payment_status === 'paid') bg-green-100 text-green-700
-                            @elseif($order->payment_status === 'pending') bg-yellow-100 text-yellow-700
-                            @else bg-gray-100 text-gray-700 @endif">
-                                {{ ucfirst($order->payment_status) }}
-                            </span>
+                        <!-- Items List -->
+                        <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                            <div class="space-y-3">
+                                @foreach ($order->orderItems as $item)
+                                <div class="flex justify-between items-center text-sm">
+                                    <div class="flex items-center gap-3 flex-1">
+                                        <img src="{{ asset('storage/' . $item->product->image) }}"
+                                            class="w-12 h-12 rounded-lg object-cover border border-gray-200">
+                                        <div class="flex-1">
+                                            <p class="text-gray-800 font-medium">{{ $item->product->name }}</p>
+                                            <p class="text-gray-500 text-xs">Qty: {{ $item->quantity }}</p>
+                                        </div>
+                                    </div>
+                                    <p class="font-semibold text-primary">
+                                        Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                    </p>
+                                </div>
+                                @endforeach
+                            </div>
                         </div>
 
-                        @if($order->payment_status === 'pending')
-                        <a href="{{ route('order.review', $order->id) }}"
-                            class="justify-between block w-fit bg-red-500 text-white px-4 py-0 rounded-full font-semiboldhover:bg-red-600 transition-all duration-300">
-                            Bayar Sekarang
-                        </a>
+                        <!-- Price Summary -->
+                        <div class="space-y-2 mb-4 text-sm">
+                            <div class="flex justify-between text-gray-600">
+                                <span>Subtotal</span>
+                                <span>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Ongkir</span>
+                                <span>
+                                    @if($order->shipping_cost > 0)
+                                    Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}
+                                    @else
+                                    <span class="text-yellow-600 font-medium">Belum ditentukan</span>
+                                    @endif
+                                </span>
+                            </div>
+                            <div class="flex justify-between font-bold text-lg text-primary pt-2 border-t border-gray-200">
+                                <span>Total</span>
+                                <span>Rp {{ number_format($order->subtotal + $order->shipping_cost, 0, ',', '.') }}</span>
+                            </div>
+                        </div>
 
-                        @elseif($order->payment_status === 'paid')
-                        @elseif($order->payment_status === 'failed')
-                        @endif
+                        <!-- Action Buttons -->
+                        <div class="flex flex-wrap gap-3 pt-4 border-t border-gray-200">
 
 
+                            <!-- Bayar Sekarang (jika pending) -->
+                            @if($order->payment_status === 'pending')
+                            <a href="{{ route('order.review', $order->id) }}"
+                                class="flex-1 min-w-[160px] text-center bg-primary text-white px-4 py-2.5 rounded-full font-semibold hover:bg-primary/90 transition-all duration-300 shadow-md">
+                                Bayar Sekarang
+                            </a>
+                            @elseif($order->payment_status === 'paid')
+                            <a href="{{ route('order.detail', $order->id) }}"
+                                class="flex-1 min-w-[160px] text-center bg-primary text-white px-4 py-2.5 rounded-full font-semibold hover:bg-primary/90 transition-all duration-300 shadow-md">
+                                Lihat Detail
+                            </a>
+                            @endif
 
+                            
 
+                            
+                        </div>
 
                     </div>
                     @endforeach
                 </div>
+
+                
+
                 @endif
             </div>
-
-            @include('pages.profile.components.rating')
 
         </div>
     </div>

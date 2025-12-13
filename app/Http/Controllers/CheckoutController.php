@@ -13,33 +13,29 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Midtrans\Snap;
 use Midtrans\Config;
-use Midtrans\Notification;
+
 
 class CheckoutController extends Controller
 {
-public function index()
-{
-    $userId = Auth::id();
+    public function index()
+    {
+        $userId = Auth::id();
 
-    $cartItems = Cart::with('product')
-        ->where('user_id', $userId)
-        ->get();
+        $cartItems = Cart::with('product')
+            ->where('user_id', $userId)
+            ->get();
 
-    $subtotal = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
-    $totalWeight = $cartItems->sum(fn($item) => $item->product->weight * $item->quantity);
+        $subtotal = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
+        $totalWeight = $cartItems->sum(fn($item) => $item->product->weight * $item->quantity);
 
-    $total = $subtotal; // total + shipping kalau ada
-
-    return view('pages.checkout.index', [
-        'cart' => $cartItems,
-        'subtotal' => $subtotal,
-        'shipping' => 0,
-        'total' => $total,
-        'totalWeight' => $totalWeight,
-        //'snapToken' => $snapToken,
-    ]);
-}
-
+        return view('pages.checkout.index', [
+            'cart' => $cartItems,
+            'subtotal' => $subtotal,
+            'shipping' => 0,
+            'total' => $subtotal,
+            'totalWeight' => $totalWeight,
+        ]);
+    }
 
     public function store(Request $request)
     {
@@ -70,7 +66,7 @@ public function index()
             return back()->with('error', 'Keranjang kosong.');
         }
 
-        
+
 
         $totalPrice = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
         $shippingCost = $request->shipping_cost ?? 0;
@@ -82,7 +78,6 @@ public function index()
             $order = Order::create([
                 'user_id' => $userId,
                 'order_number' => 'ORD-' . time(),
-                'order_id_midtrans' => 'ORDER-' . time(),
                 'full_name' => $request->full_name,
                 'phone' => $request->phone,
                 'address' => $request->shipping_address,
@@ -126,45 +121,72 @@ public function index()
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        //midtrans
-
     }
 
-public function review($id)
-{
-
-    $order = Order::with('orderItems.product')->findOrFail($id);
-    
-    //dd($order->order_id_midtrans);
-    \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
-    \Midtrans\Config::$isProduction = false;
-    \Midtrans\Config::$isSanitized = true;
-    \Midtrans\Config::$is3ds = true;
-
-    $params = [
-        'transaction_details' => [
-            'order_id' => $order->order_id_midtrans,
-            'gross_amount' => $order->total,
-        ],
-
-        'customer_details' => [
-            'first_name' => $order->full_name,
-            'email' => auth()->user()->email,
-            'phone' => $order->phone,
-        ],
-    ];
-
-    $snapToken = \Midtrans\Snap::getSnapToken($params);
-
-    return view('pages.checkout.review', compact('order', 'snapToken'));
-}
-
-
-
-    public function success($id)
+    public function review($id)
     {
         $order = Order::with('orderItems.product')->findOrFail($id);
-        return view('checkout.success', compact('order'));
+
+        // KONFIGURASI MIDTRANS
+        Config::$serverKey     = config('midtrans.serverkey');
+        Config::$isProduction  = config('midtrans.is_production');
+        Config::$isSanitized   = true;
+        Config::$is3ds         = true;
+
+        // PARAMETER UNTUK SNAP
+        $params = [
+            'transaction_details' => [
+                'order_id' => $order->order_number,
+                'gross_amount' => (int) $order->total,
+            ],
+            'customer_details' => [
+                'first_name' => $order->full_name,
+                'phone' => $order->phone,
+            ],
+            'item_details' => [
+                [
+                    'id' => $order->order_number,
+                    'price' => (int) $order->total,
+                    'quantity' => 1,
+                    'name' => 'Pembayaran Order ' . $order->order_number
+                ]
+            ]
+        ];
+
+        // AMBIL SNAP TOKEN
+        $snapToken = Snap::getSnapToken($params);
+
+        return view('pages.checkout.review', compact('order', 'snapToken'));
+    }
+
+    public function success(Request $request, $orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)->firstOrFail();
+        $item = $order->orderItems->first();
+        $product = Product::find($item->product_id);
+
+        // UPDATE STATUS ORDER
+        $order->update([
+            'payment_status'   => 'paid',
+            'shipping_status'  => 'packed',
+            'status'           => 'processing',
+        ]);
+
+        foreach ($order->orderItems as $item) {
+            $product->update([
+            'stock' => DB::raw('stock - ' . $item->quantity),
+            ]);
+        }
+        
+
+        return view('pages.checkout.success', compact('order'));
+    }
+
+    public function detail($id)
+    {
+        $order = Order::with('orderItems.product')->findOrFail($id);
+
+        // TIDAK memanggil Midtrans
+        return view('pages.checkout.detail', compact('order'));
     }
 }

@@ -149,39 +149,44 @@
                             </div>
                         </div>
 
-
-                        <!-- BUTTON BAYAR -->
-                        <button type="button" id="pay-button"
+                        <!-- button bayar -->
+                        <button id="pay-button"
                             class="w-full bg-primary text-white py-4 rounded-full font-semibold hover:bg-primary/90 transition-all duration-300">
                             Bayar Sekarang
                         </button>
+
+
                     </div>
                 </div>
 
             </div>
         </div>
     </main>
-    
-    <!-- MIDTRANS SNAP JS -->
+
     <script src="https://app.sandbox.midtrans.com/snap/snap.js"
-            data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}">
+        data-client-key="{{ config('midtrans.clientkey') }}">
     </script>
 
-    <script>
-    document.getElementById('pay-button').addEventListener('click', function () {
-        snap.pay('{{ $snapToken }}', {
-            onSuccess: function(result){
-                window.location.href = "/checkout/success/{{ $order->id }}";
-            },
-            onPending: function(result){
-                alert("Pembayaran pending");
-            },
-            onError: function(result){
-                alert("Pembayaran gagal");
-            }
+    <script type="text/javascript">
+        document.getElementById('pay-button').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            snap.pay('{{ $snapToken }}', {
+                onSuccess: function(result) {
+                    window.location.href = "/checkout/success/{{ $order->order_number }}";
+                },
+                onPending: function(result) {
+                    window.location.href = "/checkout/success/{{ $order->order_number }}";
+                },
+                onError: function(result) {
+                    alert("Terjadi kesalahan pembayaran");
+                    console.log(result);
+                }
+            });
         });
-    });
     </script>
+
+
 </body>
 
 </html>

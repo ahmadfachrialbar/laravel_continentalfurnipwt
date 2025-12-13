@@ -118,18 +118,15 @@
                 </div>
               </div>
 
-            @auth
-              <a href="{{ route('checkout.index') }}" 
-                class="block w-full text-center bg-primary text-white py-3 rounded-full font-semibold hover:opacity-90 transition">
-                Proceed to Checkout
+              @auth
+              <a href="{{ route('checkout.index') }}" class="block w-full text-center bg-primary text-white py-3 rounded-full font-semibold hover:opacity-90 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600" aria-label="{{ __('Proceed to Checkout') }}">
+                {{ __('Proceed to Checkout') }}
               </a>
-            @else
-              <a href="{{ route('login') }}" 
-                class="block w-full text-center bg-gray-400 text-white py-3 rounded-full font-semibold hover:opacity-90 transition">
-                Login dulu untuk Checkout
+              @else
+              <a href="{{ route('login', ['redirect' => route('checkout.index')]) }}" class="block w-full text-center bg-primary text-white py-3 rounded-full font-semibold hover:opacity-90 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600" aria-label="{{ __('Login to proceed to checkout') }}">
+                {{ __('Login or Register to Checkout') }}
               </a>
-            @endauth
-
+              @endauth
 
               <a href="{{ url('/') }}" class="block text-center text-sm text-gray-500 hover:text-primary transition">
                 ← Lanjut Berbelanja

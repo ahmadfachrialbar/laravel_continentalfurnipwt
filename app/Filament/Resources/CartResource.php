@@ -15,7 +15,7 @@ class CartResource extends Resource
 {
     protected static ?string $model = Cart::class;
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
-    protected static ?string $navigationGroup = 'E-Commerce';
+    protected static ?string $navigationGroup = 'Manajemen Toko';
     protected static ?string $navigationLabel = 'Carts';
     protected static ?int $navigationSort = 4;
 
