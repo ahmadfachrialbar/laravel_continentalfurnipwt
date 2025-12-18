@@ -166,27 +166,70 @@ class CheckoutController extends Controller
         $product = Product::find($item->product_id);
 
         // UPDATE STATUS ORDER
-        $order->update([
-            'payment_status'   => 'paid',
-            'shipping_status'  => 'packed',
-            'status'           => 'processing',
-        ]);
+
 
         foreach ($order->orderItems as $item) {
             $product->update([
-            'stock' => DB::raw('stock - ' . $item->quantity),
+                'stock' => DB::raw('stock - ' . $item->quantity),
             ]);
         }
-        
+
 
         return view('pages.checkout.success', compact('order'));
     }
 
+    // halaman detail
     public function detail($id)
     {
         $order = Order::with('orderItems.product')->findOrFail($id);
 
-        // TIDAK memanggil Midtrans
         return view('pages.checkout.detail', compact('order'));
+    }
+
+    public function callback(Request $request)
+    {
+        $serverKey = config('midtrans.serverkey');
+
+        $hashed = hash(
+            'sha512',
+            $request->order_id .
+                $request->status_code .
+                $request->gross_amount .
+                $serverKey
+        );
+
+        // VALIDASI SIGNATURE
+        if ($hashed !== $request->signature_key) {
+            return response()->json(['message' => 'Invalid signature'], 403);
+        }
+
+        $order = Order::where('order_number', $request->order_id)->first();
+
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        // STATUS SUKSES
+        if (
+            $request->transaction_status === 'capture' ||
+            $request->transaction_status === 'settlement'
+        ) {
+            $order->update([
+                'payment_status'  => 'paid',
+                'shipping_status' => 'packed',
+                'status'          => 'processing',
+            ]);
+        }
+
+        // STATUS GAGAL
+        if (in_array($request->transaction_status, ['deny', 'cancel', 'expire'])) {
+            $order->update([
+                'payment_status'  => 'failed',
+                'shipping_status' => 'pending',
+                'status'          => 'cancelled',
+            ]);
+        }
+
+        return response()->json(['message' => 'Callback processed'], 200);
     }
 }

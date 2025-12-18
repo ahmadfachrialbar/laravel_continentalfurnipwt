@@ -61,11 +61,10 @@ Route::middleware(['auth'])->group(function () {
 
     // success
     Route::get('/checkout/success/{order_number}', [CheckoutController::class, 'success'])
-    ->name('checkout.success');
+        ->name('checkout.success');
 
     // detail order
     Route::get('/checkout/{id}/detail', [CheckoutController::class, 'detail'])->name('order.detail');
-
 
    
 });
@@ -75,6 +74,3 @@ Route::get('/provinces', [RajaOngkirController::class, 'getProvinces']);
 Route::get('/cities/{provinceId}', [RajaOngkirController::class, 'getCities']);
 Route::get('/districts/{cityId}', [RajaOngkirController::class, 'getDistricts']);
 Route::post('/check-ongkir', [RajaOngkirController::class, 'checkOngkir']);
-
-
-
