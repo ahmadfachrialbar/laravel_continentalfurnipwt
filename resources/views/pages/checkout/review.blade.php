@@ -51,6 +51,11 @@
                             </div>
 
                             <div class="flex justify-between">
+                                <span class="font-semibold text-gray-600">Email</span>
+                                <span>{{ $order->email }}</span>
+                            </div>
+
+                            <div class="flex justify-between">
                                 <span class="font-semibold text-gray-600">Alamat Lengkap</span>
                                 <span class="max-w-[60%] text-right">{{ $order->address }}</span> <!-- Ganti shipping_address ke address -->
                             </div>

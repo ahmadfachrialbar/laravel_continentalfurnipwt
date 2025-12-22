@@ -133,6 +133,7 @@
                                             class="w-12 h-12 rounded-lg object-cover border border-gray-200">
                                         <div class="flex-1">
                                             <p class="text-gray-800 font-medium">{{ $item->product->name }}</p>
+                                            
                                             <p class="text-gray-500 text-xs">Qty: {{ $item->quantity }}</p>
                                         </div>
                                     </div>

@@ -14,6 +14,7 @@ class Order extends Model
         'order_number',  // Tambahkan ini
         'full_name',
         'phone',
+        'email',
         'address',  // Atau 'shipping_address' jika ingin konsisten
         'province_id',
         'province_name',
@@ -30,6 +31,8 @@ class Order extends Model
         'shipping_status',  // Tambahkan jika ingin simpan
         'status',
         'payment_status',
+        'payment_reference',
+        'snap_token',
     ];
 
     // Relasi tetap sama

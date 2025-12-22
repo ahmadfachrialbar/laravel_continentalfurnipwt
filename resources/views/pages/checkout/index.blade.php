@@ -94,6 +94,13 @@
                 </div>
 
                 <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                  <input type="email" name="email" placeholder="Masukkan email anda"
+                    class="w-full border border-[#E5E5E5] rounded-[15px] px-5 py-3 focus:ring-2 focus:ring-secondary focus:outline-none transition-all duration-300"
+                    required>
+                </div>
+
+                <div>
                   <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat Lengkap</label>
                   <textarea name="shipping_address" rows="3" placeholder="Nama jalan, nomor rumah, RT/RW, kelurahan"
                     class="w-full border border-[#E5E5E5] rounded-[15px] px-5 py-3 focus:ring-2 focus:ring-secondary focus:outline-none transition-all duration-300 resize-none"

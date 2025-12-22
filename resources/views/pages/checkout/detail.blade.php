@@ -79,6 +79,11 @@
                             </div>
 
                             <div class="flex flex-col md:flex-row md:justify-between gap-2">
+                                <span class="font-semibold text-gray-600">Email</span>
+                                <span class="md:text-right">{{ $order->email }}</span>
+                            </div>
+
+                            <div class="flex flex-col md:flex-row md:justify-between gap-2">
                                 <span class="font-semibold text-gray-600">Alamat Lengkap</span>
                                 <span class="md:max-w-[60%] md:text-right">{{ $order->address }}</span>
                             </div>
