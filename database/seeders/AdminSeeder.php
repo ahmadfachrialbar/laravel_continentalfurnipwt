@@ -20,7 +20,7 @@ class AdminSeeder extends Seeder
         Admin::create([
             'name'     => 'AdminCFP',
             'email'    => 'admin@cfp.com',
-            'password' => Hash::make('admincfp'),
+            'password' => Hash::make('  '),
         ]);
     }
 }

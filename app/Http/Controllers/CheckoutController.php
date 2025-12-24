@@ -136,12 +136,13 @@ class CheckoutController extends Controller
 
             $params = [
                 'transaction_details' => [
-                    'order_id' => $order->payment_reference, // ⬅️ PENTING
+                    'order_id' => $order->payment_reference,
                     'gross_amount' => (int) $order->total,
                 ],
                 'customer_details' => [
                     'first_name' => $order->full_name,
                     'phone' => $order->phone,
+                    'email' => $order->email,
                 ],
             ];
 
